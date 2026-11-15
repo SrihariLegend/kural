@@ -25,7 +25,7 @@ interrupted run continues; delete `data/work/<source>/` to redo a source from sc
 | Stack Exchange + pairs | `python -I data_tools/stackexchange.py all` (or `sites`, `so`, `finalize`) | `clean/stackexchange`, `clean/stackoverflow_general`, `clean/stackexchange_math`, `pairs/` |
 | FineWeb-Edu, FineMath | `python -I data_tools/web.py fineweb_edu` / `finemath` | `clean/fineweb_edu`, `clean/finemath` |
 | man, tldr, GNU, Arch Wiki | `python -I data_tools/docs.py all` (or `man`, `tldr`, `gnu`, `archwiki`) | `clean/docs_*` |
-| code | `python -I data_tools/code.py all` (or `curated`, `github`, `finalize`) | `clean/code` |
+| code | `python -I data_tools/code.py all` (or `curated`, `github`, `finalize`, `c_more`) | `clean/code`, `clean/code_c_more` |
 | Reddit | `python -I data_tools/reddit.py all` (or `extract`, `threads`, `finalize`) | `clean/reddit_tech`, `clean/reddit_general` |
 | manifest | `python -I data_tools/manifest.py` | `data/MANIFEST.md` |
 

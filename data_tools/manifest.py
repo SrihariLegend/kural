@@ -20,7 +20,7 @@ GROUPS = [  # (mixture slot, sources)
     ("3. Stack Exchange", ["stackexchange", "stackoverflow_general"]),
     ("4. Web (educational)", ["fineweb_edu"]),
     ("5. Math", ["finemath", "stackexchange_math"]),
-    ("6. Code", ["code"]),
+    ("6. Code", ["code", "code_c_more"]),
     ("7. Docs", ["docs_man", "docs_tldr", "docs_gnu", "docs_archwiki"]),
 ]
 
@@ -57,6 +57,8 @@ NOTES = {
             "unlicense, cc0-1.0); Shell/Makefile/Dockerfile from all 880 shards, C from the first 110. Vendored, "
             "generated, minified files and data tables dropped. Licence notices inside files are kept; "
             "`meta.repo`, `meta.path`, `meta.license` give provenance.",
+    "code_c_more": "Script: `code.py c_more`. C files (permissive licences) from github-code-clean shards "
+                   "110-199, same file filters as `code`; deduplicated within itself only.",
     "docs_man": "Script: `docs.py`. Man pages installed on the build machine, sections 1, 2, 3 (C/POSIX only), "
                 "4, 5, 7, 8, rendered at 80 columns.",
     "docs_tldr": "Script: `docs.py`. tldr-pages English pages (common, linux, osx, freebsd, openbsd, netbsd, sunos, "

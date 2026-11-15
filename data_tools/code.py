@@ -17,7 +17,10 @@ Dropped: vendored/third-party/build paths, minified or generated files ("generat
 data tables (mostly hex literals), very low alphanumeric content.
 Each document is "File: <path>\\n\\n<code>"; meta has repo, path, language, licence.
 
-Usage: .venv/bin/python -I data_tools/code.py [curated|github|finalize|all]
+A second source, code_c_more, adds the C files of shards 110-199 (deduplicated within
+itself only), because the first pass came to 1.15B tokens against a 1.5B target.
+
+Usage: .venv/bin/python -I data_tools/code.py [curated|github|finalize|c_more|all]
 """
 
 from __future__ import annotations
@@ -36,6 +39,7 @@ SOURCE = "code"
 REPO = "codeparrot/github-code-clean"
 N_SHARDS = 880
 C_SHARDS = 110
+C_MORE_SHARDS = range(110, 200)  # second pass, C only -> source "code_c_more"
 LANGS = {"C", "Shell", "Makefile", "Dockerfile"}
 PERMISSIVE = {"mit", "apache-2.0", "bsd-3-clause", "bsd-2-clause", "isc", "unlicense", "cc0-1.0"}
 
@@ -190,7 +194,7 @@ def produce_curated(name: str, drops):
 
 # ---------------------------------------------------------------- github-code-clean
 
-def produce_github(shard: int, drops):
+def produce_github(shard: int, drops, only_c: bool = False):
     import pyarrow as pa
     import pyarrow.compute as pc
     import pyarrow.parquet as pq
@@ -206,7 +210,7 @@ def produce_github(shard: int, drops):
             time.sleep(30 * (attempt + 1))
     else:
         raise RuntimeError(fname)
-    langs = LANGS if shard < C_SHARDS else LANGS - {"C"}
+    langs = {"C"} if only_c else (LANGS if shard < C_SHARDS else LANGS - {"C"})
     try:
         t = pq.read_table(local, columns=["code", "repo_name", "path", "language", "license"])
         mask = pc.and_(pc.is_in(t["language"], value_set=pa.array(sorted(langs))),
@@ -218,7 +222,10 @@ def produce_github(shard: int, drops):
             if r:
                 drops[r] += 1
                 continue
-            yield make_doc(code, path, repo, lang, lic)
+            doc = make_doc(code, path, repo, lang, lic)
+            if only_c:
+                doc["source"] = "code_c_more"
+            yield doc
     finally:
         os.unlink(local)
 
@@ -227,6 +234,8 @@ def produce(task, drops):
     kind, arg = task
     if kind == "curated":
         yield from produce_curated(arg, drops)
+    elif kind == "c_more":
+        yield from produce_github(arg, drops, only_c=True)
     else:
         yield from produce_github(arg, drops)
 
@@ -248,6 +257,13 @@ def main() -> None:
                   produce, FILTERS)
     if mode in ("github", "all"):
         run_tasks(SOURCE, [t for t in tasks_all() if t[0].startswith("g-")], produce, FILTERS, workers=10)
+    if mode in ("c_more", "all"):
+        tasks = [(f"c-{s:05d}", ("c_more", s)) for s in C_MORE_SHARDS]
+        run_tasks("code_c_more", tasks, produce, FILTERS, workers=10)
+        finalize("code_c_more", [t for t, _ in tasks], extra_stats={
+            "origin": f"https://huggingface.co/datasets/{REPO} (C files of shards {C_MORE_SHARDS.start}-"
+                      f"{C_MORE_SHARDS.stop - 1})",
+            "licence": "per file (meta.license): MIT, Apache-2.0, BSD-2/3-Clause, ISC, Unlicense, CC0"})
     if mode in ("finalize", "all"):
         from common import WORK
         ids = [tid for tid, _ in tasks_all() if (WORK / SOURCE / f"part-{tid}.json").exists()]
