@@ -9,7 +9,8 @@
 pub enum W {
     F16(*const u16),
     F32(*const f32),
-    I8 { q: *const i8, scale: *const f32, rotated: bool },
+    /// int8 rows, one float scale per row, and each row's sum (for the unsigned-activation correction in VNNI)
+    I8 { q: *const i8, scale: *const f32, rotated: bool, sums: *const i32 },
 }
 
 #[derive(Clone, Copy)]
@@ -114,6 +115,13 @@ fn has_avx2() -> bool {
     false
 }
 
+#[cfg(target_arch = "x86_64")]
+fn has_vnni() -> bool {
+    use std::sync::OnceLock;
+    static F: OnceLock<bool> = OnceLock::new();
+    *F.get_or_init(|| has_avx2() && is_x86_feature_detected!("avxvnni") && std::env::var_os("KURAL_NO_VNNI").is_none())
+}
+
 /// Whether float16 weights can be used as they are (otherwise the model converts them to float32 at load).
 pub fn native_f16() -> bool {
     has_avx2()
@@ -133,6 +141,14 @@ pub fn linear(l: &Linear, x: &[f32], rows: usize, y: &mut [f32]) {
         }
         _ => x,
     };
+    #[cfg(target_arch = "x86_64")]
+    if let W::I8 { sums, .. } = l.w {
+        if has_vnni() && l.n_in % 32 == 0 && !sums.is_null() {
+            unsafe { vnni::linear(l, x, rows, y) };
+            add_bias(l, rows, y);
+            return;
+        }
+    }
     #[cfg(target_arch = "x86_64")]
     if has_avx2() && l.n_in % 8 == 0 {
         unsafe { avx2::linear(l, x, rows, y) };
@@ -195,6 +211,69 @@ pub fn dot(a: &[f32], b: &[f32]) -> f32 {
         s += a[i] * b[i];
     }
     s
+}
+
+/// Integer path (W8A8): each input row is quantised to int8 with its own scale, shifted by +128 to unsigned
+/// bytes, and multiplied with the int8 weights by VPDPBUSD (32 multiply-adds per instruction). The shift is
+/// undone with the weight row sums: dot(x + 128, w) - 128 * sum(w) = dot(x, w).
+#[cfg(target_arch = "x86_64")]
+mod vnni {
+    use super::{Linear, W};
+    use std::arch::x86_64::*;
+
+    #[inline]
+    #[target_feature(enable = "avx2,avxvnni")]
+    unsafe fn hsum_i32(v: __m256i) -> i32 {
+        let s = _mm_add_epi32(_mm256_castsi256_si128(v), _mm256_extracti128_si256(v, 1));
+        let s = _mm_add_epi32(s, _mm_shuffle_epi32(s, 0b01_00_11_10));
+        let s = _mm_add_epi32(s, _mm_shuffle_epi32(s, 0b10_11_00_01));
+        _mm_cvtsi128_si32(s)
+    }
+
+    #[target_feature(enable = "avx2,avxvnni")]
+    pub unsafe fn linear(l: &Linear, x: &[f32], rows: usize, y: &mut [f32]) {
+        let (q, scale, sums) = match l.w {
+            W::I8 { q, scale, sums, .. } => (q, scale, sums),
+            _ => unreachable!(),
+        };
+        let k = l.n_in;
+        let mut xu = vec![0u8; rows * k];
+        let mut sx = vec![0f32; rows];
+        for r in 0..rows {
+            let row = &x[r * k..(r + 1) * k];
+            let amax = row.iter().fold(0f32, |m, v| m.max(v.abs()));
+            let s = if amax > 0.0 { amax / 127.0 } else { 1.0 };
+            sx[r] = s;
+            let inv = 1.0 / s;
+            for (o, v) in xu[r * k..(r + 1) * k].iter_mut().zip(row) {
+                *o = ((v * inv).round().clamp(-127.0, 127.0) as i32 + 128) as u8;
+            }
+        }
+        let xp = xu.as_ptr();
+        let mut r = 0;
+        while r < rows {
+            let take = (rows - r).min(4);
+            for n in 0..l.n_out {
+                let wrow = q.add(n * k);
+                let mut acc = [_mm256_setzero_si256(); 4];
+                let mut i = 0;
+                while i < k {
+                    let wv = _mm256_loadu_si256(wrow.add(i) as *const __m256i);
+                    for j in 0..take {
+                        let xv = _mm256_loadu_si256(xp.add((r + j) * k + i) as *const __m256i);
+                        acc[j] = _mm256_dpbusd_avx_epi32(acc[j], xv, wv);
+                    }
+                    i += 32;
+                }
+                let corr = 128 * *sums.add(n);
+                let ws = *scale.add(n);
+                for j in 0..take {
+                    *y.get_unchecked_mut((r + j) * l.n_out + n) = (hsum_i32(acc[j]) - corr) as f32 * sx[r + j] * ws;
+                }
+            }
+            r += take;
+        }
+    }
 }
 
 #[cfg(target_arch = "x86_64")]

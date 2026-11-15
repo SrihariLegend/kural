@@ -106,6 +106,7 @@ pub struct Model {
     pub header: Json,
     _bytes: Bytes,
     _converted: Vec<Vec<f32>>,
+    _sums: Vec<Vec<i32>>,
     tri: W,
     word: W,
     shape: Linear,
@@ -152,6 +153,7 @@ impl Model {
         };
         let native = kernels::native_f16();
         let mut converted: Vec<Vec<f32>> = Vec::new();
+        let mut sums: Vec<Vec<i32>> = Vec::new();
         let mut tensors: HashMap<String, (W, Vec<usize>)> = HashMap::new();
         for (name, t) in header.get("tensors").obj().ok_or("model file has no tensors")? {
             let off = data_start + t.get("offset").usize();
@@ -175,7 +177,13 @@ impl Model {
                     W::F32(converted.last().unwrap().as_ptr())
                 }
                 "f32" => W::F32(p as *const f32),
-                "i8" => W::I8 { q: p as *const i8, scale: std::ptr::null(), rotated: t.get("rotated").bool() },
+                "i8" => {
+                    // each row's sum, for the integer kernel
+                    let (rows, cols) = (shape[0], n / shape[0].max(1));
+                    let src = unsafe { std::slice::from_raw_parts(p as *const i8, n) };
+                    sums.push((0..rows).map(|r| src[r * cols..(r + 1) * cols].iter().map(|&v| v as i32).sum()).collect());
+                    W::I8 { q: p as *const i8, scale: std::ptr::null(), rotated: t.get("rotated").bool(), sums: sums.last().unwrap().as_ptr() }
+                }
                 other => return Err(format!("unknown dtype {other}")),
             };
             tensors.insert(name.clone(), (w, shape));
@@ -183,8 +191,8 @@ impl Model {
         let get = |name: &str| -> Result<W, String> {
             let (w, _) = tensors.get(name).ok_or_else(|| format!("model file is missing {name}"))?;
             Ok(match *w {
-                W::I8 { q, rotated, .. } => match tensors.get(&format!("{name}.scale")) {
-                    Some((W::F32(s), _)) => W::I8 { q, scale: *s, rotated },
+                W::I8 { q, rotated, sums, .. } => match tensors.get(&format!("{name}.scale")) {
+                    Some((W::F32(s), _)) => W::I8 { q, scale: *s, rotated, sums },
                     _ => return Err(format!("{name} has no scale")),
                 },
                 w => w,
@@ -248,6 +256,7 @@ impl Model {
             header,
             _bytes: bytes,
             _converted: converted,
+            _sums: sums,
         })
     }
 
