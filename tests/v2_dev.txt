@@ -1,0 +1,295 @@
+# Hand-written requests for the abilities added in version 0.2 (not produced by the generator).
+# Format:  request  =>  stage key=value ... | stage ...  ;;  next pipeline
+# A line starting with "+ " is a follow-up: it is read with the previous line's program as its context.
+# A line starting with "! " is a command the user ran by hand; the "+" lines after it follow that.
+# Used to find gaps in the training data, so the score here is not a fair measure.
+
+# ---- services and logs
+restart nginx => svc_restart unit=nginx
+is the sshd service running => svc_status unit=sshd
+stop the docker daemon => svc_stop unit=docker
+make bluetooth start at boot => svc_enable unit=bluetooth
+don't start cups on boot => svc_disable unit=cups
+show me the nginx logs => journal unit=nginx | lshow
+last 50 lines of the sshd logs => journal unit=sshd | llast n=50 | lshow
+follow the docker logs => svc_follow unit=docker
+which services failed => svc_failed
+start postgresql => svc_start unit=postgresql
+status of NetworkManager => svc_status unit=NetworkManager
+what services are running => services | lshow
+any errors in the system log => sys_errors
+how long did boot take => boot_time
+enable the tailscaled service => svc_enable unit=tailscaled
+
+# ---- machine and power
+reboot the machine => reboot
+shut down in 20 minutes => poweroff in=[20 minutes]
+power off => poweroff
+put the laptop to sleep => suspend
+lock my screen => lock
+cancel the shutdown => shutdown_cancel
+what kernel am i running => kernel
+how long has this box been up => uptime
+which distro is this => os_info
+what cpu do i have => cpu_info
+how many cores does this machine have => cpu_info
+whats my battery at => battery
+how hot is my cpu => temps
+what's the date today => date_now
+what time is it => date_now
+who is logged in => users_on
+what's my hostname => hostname
+list usb devices => usb_list
+show my disks => disks
+set volume to 40% => vol_set pct=40%
+turn the volume up => vol_up
+mute => mute
+set brightness to 70 => bright_set pct=70
+dim the screen a bit => bright_down
+turn off wifi => wifi_off
+enable bluetooth => bt_on
+
+# ---- network
+ping google.com => ping host=google.com
+is github.com reachable => ping host=github.com
+what's my public ip => public_ip
+download https://example.com/big.iso => download url=https://example.com/big.iso
+download https://example.com/a.zip to ~/Downloads => download url=https://example.com/a.zip to=~/Downloads
+ssh into pi@192.168.1.50 => ssh host=pi@192.168.1.50
+log in to myserver over ssh => ssh host=myserver
+what does example.org resolve to => dns host=example.org
+is port 22 open on 10.0.0.7 => port_check host=10.0.0.7 port=22
+what's using port 3000 => port n=3000 | pshow
+kill whatever is on port 8080 => port n=8080 | kill force=soft
+list wifi networks => wifi_list
+which wifi am i on => wifi_which
+connect to the wifi network HomeNet => wifi_connect ssid=HomeNet
+show the headers of https://example.com => http_head url=https://example.com
+serve this folder over http => serve
+start a web server on port 9000 => serve port=9000
+am i online => online
+
+# ---- packages and tools
+is vim installed => pkg_has name=vim
+which package owns /usr/bin/ls => pkg_owner file=/usr/bin/ls
+what files does htop install => pkg_files name=htop
+clean the package cache => pkg_clean
+list orphaned packages => pkg_orphans
+are there any updates available => pkg_upgradable
+show info about the firefox package => pkg_info name=firefox
+how many packages are installed => pkgs | lcount
+which installed packages have python in the name => pkgs | match text=python | lshow
+pip install requests => pip_install names=requests
+create a virtualenv => venv_make
+activate the venv => venv_on
+npm install => npm_install
+run the build script with npm => npm_run script=build
+run the tests => proj_test
+build the project => proj_build
+run script.py => run_file file=script.py
+what version of node do i have => ver cmd=node
+where is python installed => which cmd=python
+show the man page for rsync => man cmd=rsync
+how do i use tar => man cmd=tar
+
+# ---- docker
+list running containers => dk_ps
+show all containers including stopped ones => dk_ps_all
+stop the container web => dk_stop name=web
+show logs of the api container => dk_logs name=api
+get a shell in the db container => dk_shell name=db
+remove the container old-app => dk_rm name=old-app
+list docker images => dk_images
+pull the redis:7 image => dk_pull image=redis:7
+docker compose up => compose_up
+bring down the compose stack => compose_down
+clean up docker => dk_prune
+stop all containers => dk_stop_all
+
+# ---- git
+which branch am i on => git_branch_cur
+list all branches => git_branches
+stash my changes => git_stash
+pop the stash => git_stash_pop
+undo my last commit => git_undo
+discard all my local changes => git_discard
+throw away my changes to app.py => git_discard_file file=app.py
+stage everything => git_add_all
+git add main.c => git_add file=main.c
+commit everything with message "fix parser" => git_commit_all msg=[fix parser]
+merge develop into this branch => git_merge branch=develop
+delete the branch old-feature => git_branch_del branch=old-feature
+clone https://github.com/user/repo.git => git_clone url=https://github.com/user/repo.git
+show the remotes => git_remote
+who wrote each line of parser.py => git_blame file=parser.py
+amend the last commit => git_amend
+show staged changes => git_diff_staged
+publish this branch => git_push_new
+tag this commit as v1.2.0 => git_tag name=v1.2.0
+revert the last commit => git_revert
+remove untracked files => git_clean
+show the history of README.md => git_log_file file=README.md
+start a git repo here => git_init
+
+# ---- single files and folders
+rename report.txt to final.txt => rename old=report.txt new=final.txt
+create an empty file called notes.md => touch file=notes.md
+append "hello world" to log.txt => append text=[hello world] file=log.txt
+write "done" into status.txt => write text=done file=status.txt
+make a symlink to /opt/app/bin/tool called tool => link target=/opt/app/bin/tool name=tool
+back up config.yaml => backup file=config.yaml
+compare a.txt with b.txt => diff a=a.txt b=b.txt
+sha256 of ubuntu.iso => checksum file=ubuntu.iso
+what kind of file is mystery.bin => ftype file=mystery.bin
+who owns /etc/shadow => finfo file=/etc/shadow
+edit ~/.bashrc => edit file=~/.bashrc
+open report.pdf => open target=report.pdf
+list the contents of the archive backup.tar.gz => archive_list archive=backup.tar.gz
+show the folder structure 2 levels deep => tree depth=2
+what's in this folder => ls
+where am i => pwd
+go back => cd_back
+go up one level => cd_up
+delete notes.txt => paths names=notes.txt | delete
+move report.pdf to ~/Documents => paths names=report.pdf | move to=~/Documents
+copy a.txt and b.txt to backup => paths names=[a.txt and b.txt] | copy to=backup
+how big is node_modules => paths names=node_modules | sizes
+make secrets.txt private => paths names=secrets.txt | chmod mode=private
+chmod 644 index.html => paths names=index.html | chmod mode=644
+upload site.zip to deploy@web01:/var/www => paths names=site.zip | upload to=deploy@web01:/var/www
+
+# ---- files: new filters and actions
+find large files in ~/Downloads => files what=anyfile in=~/Downloads | larger | fshow
+delete old log files in /var/tmp => files what=anyfile in=/var/tmp | ext ext=log | older | delete
+show hidden files here => files what=anyfile | hidden | fshow
+find files owned by root in /srv => files what=anyfile in=/srv | owner user=root | fshow
+executable files in ~/bin => files what=anyfile in=~/bin | isexec | fshow
+files modified since last friday in ~/work => files what=anyfile in=~/work | since date=[last friday] | fshow
+files in docs that are not pdfs => files what=anyfile in=docs | not | ext ext=pdfs | fshow
+python files that don't contain "import os" => files what=anyfile | ext ext=python | not | contains text=[import os] | fshow
+search all python files for TODO => files what=anyfile | ext ext=python | fgrep text=TODO
+grep for "connection refused" in the logs folder => files what=anyfile in=logs | fgrep text=[connection refused]
+where is parse_config used => files what=anyfile | fgrep text=parse_config
+replace foo with bar in all js files => files what=anyfile | ext ext=js | replace old=foo new=bar
+rename all jpg files in photos to lowercase => files what=anyfile in=photos | ext ext=jpg | rn_lower
+replace spaces with underscores in the names of the files in ~/Music => files what=anyfile in=~/Music | rn_spaces
+change the extension of all txt files to md => files what=anyfile | ext ext=txt | rn_ext ext=md
+add the prefix old_ to every csv file in data => files what=anyfile in=data | ext ext=csv | rn_prefix text=old_
+make all sh files in scripts executable => files what=anyfile in=scripts | ext ext=sh | chmod mode=executable
+trash png files older than a month in ~/Pictures => files what=anyfile in=~/Pictures | ext ext=png | older age=[a month] | trash
+how many lines of code are in src => files what=anyfile in=src | fcat | lcount
+count the lines in all python files => files what=anyfile | ext ext=python | fcat | lcount
+count files by extension in ~/Downloads => files what=anyfile in=~/Downloads | by_ext
+find duplicate files in ~/Pictures => files what=anyfile in=~/Pictures | dupes
+save the list of pdf files in ~/docs to pdfs.txt => files what=anyfile in=~/docs | ext ext=pdf | fnames | save to=pdfs.txt
+open the second largest file in ~/Videos => files what=anyfile in=~/Videos | fsort key=size order=desc | fpick n=second | fopen
+upload all png files in shots to nas:/photos => files what=anyfile in=shots | ext ext=png | upload to=nas:/photos
+ls -l the conf files in /etc => files what=anyfile in=/etc | ext ext=conf | details
+find jpg or png files in ~/Pictures => files what=anyfile in=~/Pictures | ext ext=[jpg or png] | fshow
+change the owner of everything in /srv/www to www-data => files what=anyfile in=/srv/www | chown owner=www-data
+sudo delete the tmp files in /var/cache => sudo | files what=anyfile in=/var/cache | ext ext=tmp | delete
+
+# ---- lines: new operations
+show lines 10 to 20 of server.log => lines of=server.log | lrange a=10 b=20 | lshow
+what's on line 42 of main.c => lines of=main.c | lline n=42 | lshow
+print the second column of data.csv => lines of=data.csv | col n=second sep=comma | lshow
+show the first column of /etc/passwd separated by colons => lines of=/etc/passwd | col n=first sep=colon | lshow
+replace localhost with 127.0.0.1 in config.ini => lines of=config.ini | lreplace old=localhost new=127.0.0.1 | inplace
+how many words are in essay.txt => lines of=essay.txt | wcount
+most common lines in access.log => lines of=access.log | lfreq | lshow
+show notes.txt with line numbers => lines of=notes.txt | lnum | lshow
+remove lines containing DEBUG from app.log in place => lines of=app.log | nomatch text=DEBUG | inplace
+sort names.txt and remove duplicates in place => lines of=names.txt | lsort key=alpha order=asc | uniq | inplace
+add up the numbers in totals.txt => lines of=totals.txt | lsum | lshow
+copy the contents of key.pub to the clipboard => lines of=key.pub | clip
+pick 5 random lines from words.txt => lines of=words.txt | lshuf | ltake n=5 | lshow
+convert readme.txt to uppercase => lines of=readme.txt | lupper | lshow
+search my history for docker => history | match text=docker | lshow
+last 20 commands => history | llast n=20 | lshow
+show environment variables => env | lshow
+env vars containing PROXY => env | match text=PROXY | lshow
+kernel messages about usb => dmesg | match text=usb | lshow
+save the clipboard to snippet.txt => clipboard | save to=snippet.txt
+
+# ---- shell and environment
+what is EDITOR set to => var_show name=EDITOR
+export JAVA_HOME=/usr/lib/jvm/java-17 => var_set name=JAVA_HOME=/usr/lib/jvm/java-17 value=JAVA_HOME=/usr/lib/jvm/java-17
+set the variable DEBUG to 1 => var_set name=DEBUG value=1
+add ~/.local/bin to my path => path_add dir=~/.local/bin
+make an alias gs for "git status" => alias_make name=gs cmd=[git status]
+what is 17 times 23 => calc expr=[17 times 23]
+set a timer for 10 minutes => timer in=[10 minutes]
+list my cron jobs => cron_list
+clear the screen => clear
+reload my bashrc => reload
+show my processes => procs | puser user=my | pshow
+use the trash instead of deleting => pref key=trash state=on
+ask me before deleting => pref key=confirm state=on
+
+# ---- several steps
+make a folder called archive and move all pdfs into it => mkdir path=archive ;; files what=anyfile | ext ext=pdfs | move to=archive
+commit everything as "wip" and push => git_commit_all msg=wip ;; git_push
+update the system and then reboot => sys_update ;; reboot
+create a venv and activate it => venv_make ;; venv_on
+
+# ---- follow-ups
+show log files in /var/log older than 7 days => files what=anyfile in=/var/log | ext ext=log | older age=[7 days] | fshow
++ how much space do they take => files what=anyfile in=/var/log | ext ext=log | older age=[7 days] | total
++ ok delete them => files what=anyfile in=/var/log | ext ext=log | older age=[7 days] | delete
+list the 5 biggest files in ~/Downloads => files what=anyfile in=~/Downloads | fsort key=size order=desc | ftake n=5 | fshow
++ open the second one => files what=anyfile in=~/Downloads | fsort key=size order=desc | ftake n=5 | fpick n=second | fopen
+find python files that mention requests => files what=anyfile | ext ext=python | contains text=requests | fshow
++ only the ones changed this week => files what=anyfile | ext ext=python | newer age=[this week] | contains text=requests | fshow
++ same but in ~/code => files what=anyfile in=~/code | ext ext=python | newer age=[this week] | contains text=requests | fshow
+find jpg files in photos => files what=anyfile in=photos | ext ext=jpg | fshow
++ move them to ~/Pictures/sorted => files what=anyfile in=photos | ext ext=jpg | move to=~/Pictures/sorted
+find jpg files in photos => files what=anyfile in=photos | ext ext=jpg | fshow
++ no i meant png => files what=anyfile in=photos | ext ext=png | fshow
+show files larger than 100mb => files what=anyfile | larger size=100mb | fshow
++ sort them by size => files what=anyfile | larger size=100mb | fsort key=size order=desc | fshow
++ just the top 3 => files what=anyfile | larger size=100mb | fsort key=size order=desc | ftake n=3 | fshow
+make a folder called scratch => mkdir path=scratch
++ go there => cd path=scratch
+is the nginx service running => svc_status unit=nginx
++ restart it => svc_restart unit=nginx
++ show its logs => journal unit=nginx | lshow
+search for a package called ripgrep => pkg_search term=ripgrep
++ install it => pkg_install names=ripgrep
+show me config.yaml => view file=config.yaml
++ edit it => edit file=config.yaml
++ back it up => backup file=config.yaml
+grep for error in app.log => lines of=app.log | match text=error | lshow
++ count them => lines of=app.log | match text=error | lcount
+grep for error in app.log => lines of=app.log | match text=error | lshow
++ only the last 10 => lines of=app.log | match text=error | llast n=10 | lshow
+is firefox running => procs | pname name=firefox | pshow
++ kill it => procs | pname name=firefox | kill force=soft
+! pacman -Syu
++ again with sudo => sudo | again
+! ls -la /var/log
++ save that to listing.txt => last | save to=listing.txt
+! dmesg
++ only lines with usb => last | match text=usb | lshow
+! make test
++ run that again => again
+! cat access.log
++ how many lines is that => last | lcount
+ping github.com => ping host=github.com
++ what's its ip => dns host=github.com
+create a new branch called feature/login => git_new_branch branch=feature/login
++ delete it => git_branch_del branch=feature/login
+commit with message "fix typo" => git_commit msg=[fix typo]
++ push it => git_push
+show the logs of the web container => dk_logs name=web
++ restart it => dk_restart name=web
+extract data.tar.gz into ~/data => extract archive=data.tar.gz into=~/data
++ cd there => cd path=~/data
+find empty folders in ~/projects => files what=dirs in=~/projects | empty | fshow
++ remove them => files what=dirs in=~/projects | empty | delete
+what's using port 8080 => port n=8080 | pshow
++ kill it => port n=8080 | kill force=soft
+delete all tmp files in build => files what=anyfile in=build | ext ext=tmp | delete
++ with sudo => sudo | files what=anyfile in=build | ext ext=tmp | delete
+list files in /etc => files what=anyfile in=/etc | fshow
++ what's my ip => my_ip
++ install htop => pkg_install names=htop

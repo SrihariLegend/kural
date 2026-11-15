@@ -1,0 +1,123 @@
+# Second hand-written set, written AFTER the generator was frozen and never used to tune it.
+# Same format as natural_dev.txt.
+
+# ---- files: show
+show every yaml file under ~/.config => files what=anyfile in=~/.config | ext ext=yaml | fshow
+which pdfs in downloads are bigger than 20MB => files what=anyfile in=downloads | ext ext=pdfs | larger size=20MB | fshow
+find the 7 largest files in my home folder => files what=anyfile in=home | fsort key=size order=desc | ftake n=7 | fshow
+list all folders inside /opt => files what=dirs in=/opt | fshow
+what changed in /etc in the past week => files what=anyfile in=/etc | newer age=week | fshow
+files called notes.txt => files what=anyfile | name mode=is text=notes.txt | fshow
+look for c files that include stdio.h in src => files what=anyfile in=src | ext ext=c | contains text=stdio.h | fshow
+show me images under 100kb in assets => files what=anyfile in=assets | ext ext=images | smaller size=100kb | fshow
+where is the file named credentials.json => files what=anyfile | name mode=is text=credentials.json | fshow
+list the oldest 4 files in ~/Desktop => files what=anyfile in=~/Desktop | fsort key=time order=asc | ftake n=4 | fshow
+find stuff bigger than 2 gigabytes in /var/lib => files what=anyfile in=/var/lib | larger size=[2 gigabytes] | fshow
+any markdown files changed today? => files what=anyfile | ext ext=markdown | newer age=today | fshow
+show files whose name ends with _backup in ~/work => files what=anyfile in=~/work | name mode=ends text=_backup | fshow
+find everything older than 2 years in ~/Documents => files what=anyfile in=~/Documents | older age=[2 years] | fshow
+which is the biggest file in /usr/lib => files what=anyfile in=/usr/lib | fsort key=size order=desc | ftake | fshow
+list html files in public sorted by name => files what=anyfile in=public | ext ext=html | fsort key=name order=asc | fshow
+show folders with cache in the name under ~ => files what=dirs in=~ | name mode=has text=cache | fshow
+find go files modified in the last 3 hours => files what=anyfile | ext ext=go | newer age=[3 hours] | fshow
+list empty directories under /srv => files what=dirs in=/srv | empty | fshow
+are there any mkv files in ~/Videos larger than 4GB => files what=anyfile in=~/Videos | ext ext=mkv | larger size=4GB | fshow
+whats the largest thing in ~/Downloads => files what=anyfile in=~/Downloads | fsort key=size order=desc | ftake | fshow
+gimme all the txt files in here => files what=anyfile | ext ext=txt | fshow
+
+# ---- files: act, count, measure
+delete every .log file in /tmp => files what=anyfile in=/tmp | ext ext=.log | delete
+remove files older than 60 days from ~/Downloads => files what=anyfile in=~/Downloads | older age=[60 days] | delete
+erase all empty files here => files what=anyfile | empty | delete
+copy all jpg files from ~/Pictures to /mnt/backup/pics => files what=anyfile in=~/Pictures | ext ext=jpg | copy to=/mnt/backup/pics
+move the 5 biggest files in downloads to /mnt/usb => files what=anyfile in=downloads | fsort key=size order=desc | ftake n=5 | move to=/mnt/usb
+zip all text files in notes into notes.zip => files what=anyfile in=notes | ext ext=text | compress fmt=zip to=notes.zip
+make a tarball of the python files in src called src-backup.tar.gz => files what=anyfile in=src | ext ext=python | compress fmt=tgz to=src-backup.tar.gz
+how many png files are there in assets => files what=anyfile in=assets | ext ext=png | fcount
+count the files in /usr/bin => files what=anyfile in=/usr/bin | fcount
+how much room do the logs in /var/log use => files what=anyfile in=/var/log | ext ext=logs | total
+what's the combined size of mp4 files in ~/Videos => files what=anyfile in=~/Videos | ext ext=mp4 | total
+show how big each directory in /var is => files what=dirs in=/var | sizes
+delete directories named __pycache__ under ~/code => files what=dirs in=~/code | name mode=is text=__pycache__ | delete
+move pdfs modified this week from downloads to ~/Documents/reading => files what=anyfile in=downloads | ext ext=pdfs | newer age=[this week] | move to=~/Documents/reading
+throw away iso files bigger than 1 gig in downloads => files what=anyfile in=downloads | ext ext=iso | larger size=[1 gig] | delete
+count json files containing "version" in packages => files what=anyfile in=packages | ext ext=json | contains text=version | fcount
+back up the 20 newest files in ~/work to /mnt/nas => files what=anyfile in=~/work | fsort key=time order=desc | ftake n=20 | copy to=/mnt/nas
+remove the oldest 10 files in /var/backups => files what=anyfile in=/var/backups | fsort key=time order=asc | ftake n=10 | delete
+how many subfolders does ~/Music have => files what=dirs in=~/Music | fcount
+compress logs older than a month in /var/log => files what=anyfile in=/var/log | ext ext=logs | older age=[a month] | compress fmt=tgz
+i want every file over 1gb gone from ~/Downloads => files what=anyfile in=~/Downloads | larger size=1gb | delete
+need the size of every folder in /home => files what=dirs in=/home | sizes
+
+# ---- lines
+print lines mentioning refused in sshd.log => lines of=sshd.log | match text=refused | lshow
+how many lines are there in data.csv => lines of=data.csv | lcount
+give me the first 3 lines of todo.md => lines of=todo.md | ltake n=3 | lshow
+last 100 lines of /var/log/pacman.log => lines of=/var/log/pacman.log | llast n=100 | lshow
+show lines in app.py without import => lines of=app.py | nomatch text=import | lshow
+count the lines containing WARN in build.log => lines of=build.log | match text=WARN | lcount
+sort words.txt in reverse => lines of=words.txt | lsort key=alpha order=desc | lshow
+dedupe urls.txt => lines of=urls.txt | uniq | lshow
+find "segmentation fault" in crash.log => lines of=crash.log | match text=[segmentation fault] | lshow
+take lines with GET from access.log, sort them and save to gets.txt => lines of=access.log | match text=GET | lsort key=alpha order=asc | save to=gets.txt
+the end of install.log => lines of=install.log | llast | lshow
+sort numbers.txt numerically => lines of=numbers.txt | lsort key=num order=asc | lshow
+which lines of settings.json have "theme" => lines of=settings.json | match text=theme | lshow
+strip duplicate lines from list.txt and store in list-clean.txt => lines of=list.txt | uniq | save to=list-clean.txt
+how many lines in main.rs contain unwrap => lines of=main.rs | match text=unwrap | lcount
+
+# ---- processes
+terminate vlc => procs | pname name=vlc | kill force=soft
+force kill steam => procs | pname name=steam | kill force=hard
+is postgres up => procs | pname name=postgres | pshow
+what is eating my ram => procs | psort key=mem order=desc | ptake | pshow
+show the 10 processes using the most cpu => procs | psort key=cpu order=desc | ptake n=10 | pshow
+how many firefox processes are there => procs | pname name=firefox | pcount
+close all chrome processes => procs | pname name=chrome | kill force=soft
+list running programs => procs | pshow
+processes by cpu usage => procs | psort key=cpu order=desc | pshow
+kill the 2 processes with the highest memory => procs | psort key=mem order=desc | ptake n=2 | kill force=soft
+check if nginx is running => procs | pname name=nginx | pshow
+which process uses the most memory => procs | psort key=mem order=desc | ptake | pshow
+any process named zoom? => procs | pname name=zoom | pshow
+top 3 memory hogs => procs | psort key=mem order=desc | ptake n=3 | pshow
+
+# ---- stand-alone commands
+install docker => pkg_install names=docker
+install tmux and fzf => pkg_install names=[tmux fzf]
+uninstall steam => pkg_remove names=steam
+find packages related to python => pkg_search term=python
+install updates => sys_update
+check disk space => disk_free
+how much memory is available => mem_free
+show my ip => my_ip
+list open ports => ports
+create a directory called logs => mkdir path=logs
+take me to /var/log => cd path=/var/log
+print package.json => view file=package.json
+monitor /var/log/auth.log in real time => follow file=/var/log/auth.log
+give build.sh execute permission => make_exec file=build.sh
+unpack release.tar.xz => extract archive=release.tar.xz
+extract fonts.zip to ~/.fonts => extract archive=fonts.zip into=~/.fonts
+repo status => git_status
+last 10 commits => git_log n=10
+what did i change => git_diff
+git pull => git_pull
+push to origin => git_push
+make a commit saying "add login page" => git_commit msg=[add login page]
+go to the staging branch => git_checkout branch=staging
+new branch hotfix-42 => git_new_branch branch=hotfix-42
+look up neofetch in the repos => pkg_search term=neofetch
+read /etc/fstab => view file=/etc/fstab
+
+# ---- chains
+make a folder called archive and move all zip files into it => mkdir path=archive ;; files what=anyfile | ext ext=zip | move to=archive
+create a folder named sorted then copy all pdfs from ~/Downloads into it => mkdir path=sorted ;; files what=anyfile in=~/Downloads | ext ext=pdfs | copy to=sorted
+pull and then show git status => git_pull ;; git_status
+commit with message "fix tests" and then push => git_commit msg=[fix tests] ;; git_push
+go to ~/code/api and show the last 5 commits => cd path=~/code/api ;; git_log n=5
+install nginx and then check which ports are open => pkg_install names=nginx ;; ports
+kill chrome then show free memory => procs | pname name=chrome | kill force=soft ;; mem_free
+delete all .bak files in ~/work and then count the files in ~/work => files what=anyfile in=~/work | ext ext=.bak | delete ;; files what=anyfile in=~/work | fcount
+show disk space and then list the 5 biggest files in /var => disk_free ;; files what=anyfile in=/var | fsort key=size order=desc | ftake n=5 | fshow
+unzip site.zip into www then list html files in www => extract archive=site.zip into=www ;; files what=anyfile in=www | ext ext=html | fshow

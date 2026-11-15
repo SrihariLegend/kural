@@ -1,0 +1,44 @@
+# These 39 requests were written for version 0.1 as examples of what it could NOT do (it was meant to decline them).
+# Most are now in scope. The wording predates the 0.2 training phrasings, so this is a fairer check than v2_dev.txt.
+# "=> DECLINE" marks the ones that are still outside what plainsh does.
+
+# ---- once outside
+rename report.pdf to final-report.pdf => rename old=report.pdf new=final-report.pdf
+make every filename in photos lowercase => files what=anyfile in=photos | rn_lower
+turn clip.mov into an mp3 => DECLINE
+shrink banner.png to half size => DECLINE
+log into the box at 172.16.0.9 => ssh host=172.16.0.9
+fetch https://downloads.example.net/tool.tar.gz => download url=https://downloads.example.net/tool.tar.gz
+is google.com up => ping host=google.com
+dim the screen a bit => bright_down
+make it louder => vol_up
+restart my laptop => reboot
+swap tabs for spaces in main.py => DECLINE
+stick "done" at the end of log.txt => append text=done file=log.txt
+open notes.md in nano => edit file=notes.md
+make alice the owner of shared => paths names=shared | chown owner=alice
+bounce the postgres service => svc_restart unit=postgres
+what's today's date => date_now
+add 17 and 25 => calc expr=[17 and 25]
+hey => DECLINE
+how's the weather looking => DECLINE
+kick off the test suite => proj_test
+spin up the dev server => proj_run
+pip install requests => pip_install names=requests
+clone git@github.com:me/dotfiles.git => git_clone url=git@github.com:me/dotfiles.git
+roll back my last commit => git_undo
+plug in the external drive and mount it => DECLINE
+remind me about the meeting in 20 minutes => timer in=[20 minutes]
+look up rust lifetimes online => DECLINE
+launch the browser => DECLINE
+grab a screenshot => DECLINE
+what does chmod mean => man cmd=chmod
+touch empty.txt => touch file=empty.txt
+compare old.txt against new.txt => diff a=old.txt b=new.txt
+md5 of setup.iso => md5 file=setup.iso
+what's my hostname => hostname
+how many cores does this machine have => cpu_info
+put ~/bin on my path => path_add dir=~/bin
+mirror ~/work to backup-server => paths names=~/work | upload to=backup-server
+how many words are in essay.txt => lines of=essay.txt | wcount
+show me line 42 of server.py => lines of=server.py | lline n=42 | lshow

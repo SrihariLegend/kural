@@ -1,0 +1,156 @@
+# Hand-written requests (not produced by the generator) with the program they should parse to.
+# Format:  request  =>  stage key=value ... | stage ...  ;;  next pipeline
+# A value with spaces goes in [brackets]. Scoring compares the compiled command, so harmless
+# differences in which exact words were copied (e.g. "downloads" vs "my downloads") still count as right.
+
+# ---- files: show
+list all python files here => files what=anyfile | ext ext=python | fshow
+find every pdf in ~/Documents => files what=anyfile in=~/Documents | ext ext=pdf | fshow
+where are my mp3s => files what=anyfile | ext ext=mp3s | fshow
+show me files bigger than 1GB in my home folder => files what=anyfile in=home | larger size=1GB | fshow
+what are the 5 biggest files in /var => files what=anyfile in=/var | fsort key=size order=desc | ftake n=5 | fshow
+which files in /etc changed in the last 2 days => files what=anyfile in=/etc | newer age=[2 days] | fshow
+any files over 500 megs under ~/Videos? => files what=anyfile in=~/Videos | larger size=[500 megs] | fshow
+find files named docker-compose.yml => files what=anyfile | name mode=is text=docker-compose.yml | fshow
+look for anything with invoice in the name inside downloads => files what=anyfile in=downloads | name mode=has text=invoice | fshow
+show the newest file in ~/Downloads => files what=anyfile in=~/Downloads | fsort key=time order=desc | ftake | fshow
+list javascript files that mention fetch in src => files what=anyfile in=src | ext ext=javascript | contains text=fetch | fshow
+empty files in /tmp => files what=anyfile in=/tmp | empty | fshow
+show all directories in ~/Projects => files what=dirs in=~/Projects | fshow
+files that haven't been touched in 6 months in ~/Documents => files what=anyfile in=~/Documents | older age=[6 months] | fshow
+list files in /var/log sorted by size => files what=anyfile in=/var/log | fsort key=size order=desc | fshow
+find txt files containing "hello world" => files what=anyfile | ext ext=txt | contains text=[hello world] | fshow
+show me the three oldest files in my documents => files what=anyfile in=documents | fsort key=time order=asc | ftake n=three | fshow
+which csv files are smaller than 10kb in data => files what=anyfile in=data | ext ext=csv | smaller size=10kb | fshow
+list files starting with IMG in Pictures => files what=anyfile in=Pictures | name mode=starts text=IMG | fshow
+find all the .env files under ~/code => files what=anyfile in=~/code | ext ext=.env | fshow
+large videos (over 2 gigs) in ~/Movies => files what=anyfile in=~/Movies | ext ext=videos | larger size=[2 gigs] | fshow
+what files did i edit this week in ~/work => files what=anyfile in=~/work | newer age=[this week] | fshow
+pls find me that file called budget.xlsx => files what=anyfile | name mode=is text=budget.xlsx | fshow
+i need the 10 newest files from downloads => files what=anyfile in=downloads | fsort key=time order=desc | ftake n=10 | fshow
+anything in /var/log bigger than 1G? => files what=anyfile in=/var/log | larger size=1G | fshow
+stuff modified in the last hour => files what=anyfile | newer age=hour | fshow
+smallest 5 files in build => files what=anyfile in=build | fsort key=size order=asc | ftake n=5 | fshow
+show me the 2 most recently modified files in ~/notes => files what=anyfile in=~/notes | fsort key=time order=desc | ftake n=2 | fshow
+find files with TODO in them under src => files what=anyfile in=src | contains text=TODO | fshow
+does anything in ~/dev mention api_key => files what=anyfile in=~/dev | contains text=api_key | fshow
+
+# ---- files: act, count, measure
+remove all .tmp files in /tmp older than a week => files what=anyfile in=/tmp | ext ext=.tmp | older age=[a week] | delete
+delete empty folders in ~/Downloads => files what=dirs in=~/Downloads | empty | delete
+get rid of every .pyc file under src => files what=anyfile in=src | ext ext=.pyc | delete
+clean up log files bigger than 100MB in /var/log => files what=anyfile in=/var/log | ext ext=log | larger size=100MB | delete
+move all png files from desktop to ~/Pictures/screens => files what=anyfile in=desktop | ext ext=png | move to=~/Pictures/screens
+copy every markdown file in docs to ~/backup/notes => files what=anyfile in=docs | ext ext=markdown | copy to=~/backup/notes
+zip up all the csv files in data => files what=anyfile in=data | ext ext=csv | compress fmt=zip
+archive the logs in /var/log older than 30 days into old-logs.tar.gz => files what=anyfile in=/var/log | ext ext=logs | older age=[30 days] | compress fmt=tgz to=old-logs.tar.gz
+how many jpgs are in Pictures => files what=anyfile in=Pictures | ext ext=jpgs | fcount
+count files in ~/Downloads => files what=anyfile in=~/Downloads | fcount
+how many files here are larger than 1 gb => files what=anyfile | larger size=[1 gb] | fcount
+how much space do my videos take up in ~/Videos => files what=anyfile in=~/Videos | ext ext=videos | total
+total size of all pdfs in documents => files what=anyfile in=documents | ext ext=pdfs | total
+how big is each folder in ~ => files what=dirs in=~ | sizes
+what's eating my disk space in /var => files what=dirs in=/var | sizes
+delete the 3 largest files in ~/Downloads => files what=anyfile in=~/Downloads | fsort key=size order=desc | ftake n=3 | delete
+move files older than a year from documents to archive => files what=anyfile in=documents | older age=[a year] | move to=archive
+copy the 10 most recent photos from Pictures to /mnt/usb => files what=anyfile in=Pictures | ext ext=photos | fsort key=time order=desc | ftake n=10 | copy to=/mnt/usb
+back up all my python scripts to ~/backup => files what=anyfile | ext ext=python | copy to=~/backup
+delete files in tmp that are bigger than 50mb and older than 2 days => files what=anyfile in=tmp | larger size=50mb | older age=[2 days] | delete
+tar up everything in src modified this month => files what=anyfile in=src | newer age=[this month] | compress fmt=tgz
+how many empty directories are under /var/tmp => files what=dirs in=/var/tmp | empty | fcount
+count the rust files that contain unsafe => files what=anyfile | ext ext=rust | contains text=unsafe | fcount
+wipe all logs older than 90 days from /var/log => files what=anyfile in=/var/log | ext ext=logs | older age=[90 days] | delete
+could you count how many json files there are in config => files what=anyfile in=config | ext ext=json | fcount
+sizes of the folders in ~/Projects => files what=dirs in=~/Projects | sizes
+put all mp4 files from downloads into videos => files what=anyfile in=downloads | ext ext=mp4 | move to=videos
+get rid of zip files larger than 200 mb in downloads => files what=anyfile in=downloads | ext ext=zip | larger size=[200 mb] | delete
+how many folders are in ~/Projects => files what=dirs in=~/Projects | fcount
+nuke every node_modules folder under ~/code => files what=dirs in=~/code | name mode=is text=node_modules | delete
+
+# ---- lines
+show lines containing ERROR in /var/log/syslog => lines of=/var/log/syslog | match text=ERROR | lshow
+grep for timeout in nginx.conf => lines of=nginx.conf | match text=timeout | lshow
+how many lines does main.py have => lines of=main.py | lcount
+first 10 lines of README.md => lines of=README.md | ltake n=10 | lshow
+show the last 50 lines of app.log => lines of=app.log | llast n=50 | lshow
+count lines with "failed login" in auth.log => lines of=auth.log | match text=[failed login] | lcount
+lines in config.ini that don't mention debug => lines of=config.ini | nomatch text=debug | lshow
+sort names.txt alphabetically => lines of=names.txt | lsort key=alpha order=asc | lshow
+remove duplicate lines from emails.txt and save to clean.txt => lines of=emails.txt | uniq | save to=clean.txt
+unique lines in hosts.txt => lines of=hosts.txt | uniq | lshow
+sort scores.txt numerically biggest first => lines of=scores.txt | lsort key=num order=desc | lshow
+find the word password in notes.md => lines of=notes.md | match text=password | lshow
+get all lines with 404 from access.log, sort them, dedupe and write to 404s.txt => lines of=access.log | match text=404 | lsort key=alpha order=asc | uniq | save to=404s.txt
+tail of error.log => lines of=error.log | llast | lshow
+what's at the top of changelog.md => lines of=changelog.md | ltake | lshow
+search server.log for "connection reset" => lines of=server.log | match text=[connection reset] | lshow
+how many times does TODO appear in todo.txt => lines of=todo.txt | match text=TODO | lcount
+
+# ---- processes
+kill chrome => procs | pname name=chrome | kill force=soft
+force quit slack => procs | pname name=slack | kill force=hard
+is docker running => procs | pname name=docker | pshow
+what's hogging my cpu => procs | psort key=cpu order=desc | ptake | pshow
+top 5 processes by memory => procs | psort key=mem order=desc | ptake n=5 | pshow
+show all running processes => procs | pshow
+how many python processes are running => procs | pname name=python | pcount
+kill the process using the most ram => procs | psort key=mem order=desc | ptake | kill force=soft
+stop all node processes => procs | pname name=node | kill force=soft
+which 3 programs use the most cpu => procs | psort key=cpu order=desc | ptake n=3 | pshow
+kill -9 java => procs | pname name=java | kill force=hard
+list processes sorted by memory => procs | psort key=mem order=desc | pshow
+how many processes are running => procs | pcount
+find the nginx process => procs | pname name=nginx | pshow
+yo whats taking all my memory => procs | psort key=mem order=desc | ptake | pshow
+
+# ---- stand-alone commands
+install vim => pkg_install names=vim
+install git curl and wget => pkg_install names=[git curl wget]
+uninstall firefox => pkg_remove names=firefox
+remove the vlc package => pkg_remove names=vlc
+search for a package called ripgrep => pkg_search term=ripgrep
+update the system => sys_update
+upgrade all packages => sys_update
+how much disk space do i have left => disk_free
+free memory => mem_free
+how much ram am i using => mem_free
+what's my ip address => my_ip
+which ports are open => ports
+make a directory called projects/new-app => mkdir path=projects/new-app
+create a folder named photos2024 => mkdir path=photos2024
+cd to ~/Downloads => cd path=~/Downloads
+go to the documents folder => cd path=documents
+show me what's in config.yaml => view file=config.yaml
+cat /etc/hosts => view file=/etc/hosts
+follow /var/log/syslog => follow file=/var/log/syslog
+watch app.log for new lines => follow file=app.log
+make deploy.sh executable => make_exec file=deploy.sh
+chmod +x run.py => make_exec file=run.py
+extract archive.tar.gz => extract archive=archive.tar.gz
+unzip photos.zip into ~/Pictures/trip => extract archive=photos.zip into=~/Pictures/trip
+git status => git_status
+show the last 5 commits => git_log n=5
+commit history => git_log
+show the diff => git_diff
+pull the latest changes => git_pull
+push my commits => git_push
+commit with message "fix navbar overflow" => git_commit msg=[fix navbar overflow]
+switch to the develop branch => git_checkout branch=develop
+create a new branch called feature/payments => git_new_branch branch=feature/payments
+checkout main => git_checkout branch=main
+is there a package for imagemagick => pkg_search term=imagemagick
+untar backup.tgz to /tmp/restore => extract archive=backup.tgz into=/tmp/restore
+open notes.txt => open target=notes.txt
+tail -f server.log => follow file=server.log
+
+# ---- chains
+make a folder called old and move all log files into it => mkdir path=old ;; files what=anyfile | ext ext=log | move to=old
+create a directory named pdfs then copy every pdf from downloads there => mkdir path=pdfs ;; files what=anyfile in=downloads | ext ext=pdf | copy to=pdfs
+git pull and then show the last 3 commits => git_pull ;; git_log n=3
+commit with message "wip" and push => git_commit msg=wip ;; git_push
+cd to src and list python files => cd path=src ;; files what=anyfile | ext ext=python | fshow
+update the system then install neovim => sys_update ;; pkg_install names=neovim
+kill firefox and then show memory usage => procs | pname name=firefox | kill force=soft ;; mem_free
+delete all .tmp files in /tmp and then show free disk space => files what=anyfile in=/tmp | ext ext=.tmp | delete ;; disk_free
+count lines in a.txt and count lines in b.txt => lines of=a.txt | lcount ;; lines of=b.txt | lcount
+extract data.zip into raw, then count the csv files in raw => extract archive=data.zip into=raw ;; files what=anyfile in=raw | ext ext=csv | fcount

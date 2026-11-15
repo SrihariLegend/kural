@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plainsh"
+version = "0.2.0"
+description = "Plain English to bash, fully local: a small parser copies your words into a typed program that compiles to a command"
+requires-python = ">=3.9"
+dependencies = ["numpy"]
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+train = ["torch"]
+
+[project.scripts]
+plainsh = "plainsh.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["plainsh*"]
+
+[tool.setuptools.package-data]
+plainsh = ["weights.npz", "lexicon.json", "shell/*.bash"]

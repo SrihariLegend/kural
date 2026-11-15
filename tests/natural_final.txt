@@ -1,0 +1,86 @@
+# Third hand-written set, written after the last change to the generator and scored exactly once.
+# Nothing was tuned on it. Same format as natural_dev.txt.
+
+# ---- files
+list all rust files in ~/code/engine => files what=anyfile in=~/code/engine | ext ext=rust | fshow
+show the 3 newest files in /var/log => files what=anyfile in=/var/log | fsort key=time order=desc | ftake n=3 | fshow
+find files larger than 300MB under /opt => files what=anyfile in=/opt | larger size=300MB | fshow
+which folders in ~/dev are empty => files what=dirs in=~/dev | empty | fshow
+files containing "BEGIN RSA" in ~/.ssh => files what=anyfile in=~/.ssh | contains text=[BEGIN RSA] | fshow
+show sql files older than 1 year in backups => files what=anyfile in=backups | ext ext=sql | older age=[1 year] | fshow
+find anything named Thumbs.db on /mnt/usb => files what=anyfile in=/mnt/usb | name mode=is text=Thumbs.db | fshow
+list png files with icon in the name in assets => files what=anyfile in=assets | ext ext=png | name mode=has text=icon | fshow
+what are the ten biggest files in ~/Videos => files what=anyfile in=~/Videos | fsort key=size order=desc | ftake n=ten | fshow
+show me everything modified in the last 30 minutes => files what=anyfile | newer age=[30 minutes] | fshow
+count the mp3 files in ~/Music => files what=anyfile in=~/Music | ext ext=mp3 | fcount
+how many files in /etc are smaller than 1kb => files what=anyfile in=/etc | smaller size=1kb | fcount
+delete all .DS_Store files under ~/Projects => files what=anyfile in=~/Projects | ext ext=.DS_Store | delete
+remove empty directories in /var/tmp => files what=dirs in=/var/tmp | empty | delete
+move all docx files from desktop to documents => files what=anyfile in=desktop | ext ext=docx | move to=documents
+copy the newest 5 files from ~/Downloads to ~/keep => files what=anyfile in=~/Downloads | fsort key=time order=desc | ftake n=5 | copy to=~/keep
+compress all csv files in exports into exports.zip => files what=anyfile in=exports | ext ext=csv | compress fmt=zip to=exports.zip
+total size of files older than 6 months in ~/Downloads => files what=anyfile in=~/Downloads | older age=[6 months] | total
+how big is each folder in /usr => files what=dirs in=/usr | sizes
+delete the oldest 20 files in ~/.cache/thumbnails => files what=anyfile in=~/.cache/thumbnails | fsort key=time order=asc | ftake n=20 | delete
+get rid of all tmp files bigger than 10 megs in /tmp => files what=anyfile in=/tmp | ext ext=tmp | larger size=[10 megs] | delete
+archive everything in reports modified this year into reports-2026.tar.gz => files what=anyfile in=reports | newer age=[this year] | compress fmt=tgz to=reports-2026.tar.gz
+find the smallest file in logs => files what=anyfile in=logs | fsort key=size order=asc | ftake | fshow
+list directories starting with test in src => files what=dirs in=src | name mode=starts text=test | fshow
+
+# ---- lines
+show lines with FATAL in /var/log/app/server.log => lines of=/var/log/app/server.log | match text=FATAL | lshow
+how many lines are in /etc/passwd => lines of=/etc/passwd | lcount
+last 30 lines of debug.log => lines of=debug.log | llast n=30 | lshow
+first 20 lines of Makefile => lines of=Makefile | ltake n=20 | lshow
+lines in requirements.txt that don't contain numpy => lines of=requirements.txt | nomatch text=numpy | lshow
+count lines with "status=500" in api.log => lines of=api.log | match text=status=500 | lcount
+sort users.csv and remove duplicates => lines of=users.csv | lsort key=alpha order=asc | uniq | lshow
+grep TODO in main.go => lines of=main.go | match text=TODO | lshow
+save lines containing error from server.log to errors.log => lines of=server.log | match text=error | save to=errors.log
+show the beginning of notes.md => lines of=notes.md | ltake | lshow
+
+# ---- processes
+kill spotify => procs | pname name=spotify | kill force=soft
+force stop discord => procs | pname name=discord | kill force=hard
+is sshd running => procs | pname name=sshd | pshow
+what's using the most cpu => procs | psort key=cpu order=desc | ptake | pshow
+show the top 8 processes by ram => procs | psort key=mem order=desc | ptake n=8 | pshow
+how many node processes are running => procs | pname name=node | pcount
+list all processes => procs | pshow
+kill the process eating the most cpu => procs | psort key=cpu order=desc | ptake | kill force=soft
+
+# ---- stand-alone commands
+install ffmpeg => pkg_install names=ffmpeg
+install ripgrep, bat and fd => pkg_install names=[ripgrep bat fd]
+uninstall the discord package => pkg_remove names=discord
+search for a package called zoxide => pkg_search term=zoxide
+upgrade the system => sys_update
+how much free space do i have => disk_free
+show memory usage => mem_free
+what ip do i have => my_ip
+which ports are listening => ports
+make a new directory called releases/v2 => mkdir path=releases/v2
+cd into ~/Projects/plainsh => cd path=~/Projects/plainsh
+show the contents of ~/.bashrc => view file=~/.bashrc
+tail /var/log/nginx/error.log live => follow file=/var/log/nginx/error.log
+make install.sh executable => make_exec file=install.sh
+extract backup.tar.gz into /tmp/restore => extract archive=backup.tar.gz into=/tmp/restore
+unzip assets.zip => extract archive=assets.zip
+show git status => git_status
+show me the last 15 commits => git_log n=15
+git diff => git_diff
+pull the newest commits => git_pull
+push the branch => git_push
+commit with the message "bump version to 2.0" => git_commit msg=[bump version to 2.0]
+checkout the release-1.2 branch => git_checkout branch=release-1.2
+start a new branch named experiment/cache => git_new_branch branch=experiment/cache
+
+# ---- chains
+make a folder called keep and copy all png files into it => mkdir path=keep ;; files what=anyfile | ext ext=png | copy to=keep
+git pull then show the diff => git_pull ;; git_diff
+cd to /var/log and show the 5 largest files => cd path=/var/log ;; files what=anyfile | fsort key=size order=desc | ftake n=5 | fshow
+commit with message "docs" then push => git_commit msg=docs ;; git_push
+kill slack and then kill discord => procs | pname name=slack | kill force=soft ;; procs | pname name=discord | kill force=soft
+count files in src and then count files in tests => files what=anyfile in=src | fcount ;; files what=anyfile in=tests | fcount
+update the system and then check disk space => sys_update ;; disk_free
+create a directory called out, then move all json files from data into it => mkdir path=out ;; files what=anyfile in=data | ext ext=json | move to=out

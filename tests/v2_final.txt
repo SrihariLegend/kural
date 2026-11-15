@@ -1,0 +1,213 @@
+# Hand-written requests for version 0.2, written before the model was scored on them and never used for tuning.
+# Same format as v2_dev.txt ("+ " continues from the previous line, "! " is a command run by hand).
+
+# ---- services, machine, power
+bounce the sshd service => svc_restart unit=sshd
+check on the docker service => svc_status unit=docker
+turn off the bluetooth service => svc_stop unit=bluetooth
+have nginx start automatically at boot => svc_enable unit=nginx
+give me the last 100 lines of the nginx logs => journal unit=nginx | llast n=100 | lshow
+watch the sshd logs live => svc_follow unit=sshd
+did any units fail => svc_failed
+restart my computer => reboot
+turn the computer off in 45 minutes => poweroff in=[45 minutes]
+suspend => suspend
+which kernel version is this => kernel
+when did this machine last reboot => uptime
+what linux distro am i using => os_info
+show cpu info => cpu_info
+battery percentage => battery
+check the temperatures => temps
+what day is it => date_now
+show me a calendar => calendar
+whoami => whoami
+what usb devices are plugged in => usb_list
+what partitions do i have => disks
+volume to 25 percent => vol_set pct=[25 percent]
+make it quieter => vol_down
+brightness 30% => bright_set pct=30%
+make the screen brighter => bright_up
+turn bluetooth off => bt_off
+switch on wifi => wifi_on
+
+# ---- network
+check if archlinux.org is up => ping host=archlinux.org
+what is my external ip address => public_ip
+grab https://releases.example.org/tool-1.2.tar.gz => download url=https://releases.example.org/tool-1.2.tar.gz
+fetch https://example.net/data.csv into ~/datasets => download url=https://example.net/data.csv to=~/datasets
+connect to deploy@staging.example.com with ssh => ssh host=deploy@staging.example.com
+look up the ip of wikipedia.org => dns host=wikipedia.org
+which process is listening on port 5432 => port n=5432 | pshow
+free up port 3000 => port n=3000 | kill force=soft
+scan for wifi networks => wifi_list
+do i have internet => online
+share this directory on the network => serve
+
+# ---- packages and tools
+do i have ffmpeg installed => pkg_has name=ffmpeg
+what package provides /usr/bin/convert => pkg_owner file=/usr/bin/convert
+remove unneeded packages => pkg_autoremove
+check for updates => pkg_upgradable
+count installed packages => pkgs | lcount
+install flask with pip => pip_install names=flask
+make a python virtual environment in env => venv_make path=env
+deactivate the virtualenv => venv_off
+install the node dependencies => npm_install
+npm run lint => npm_run script=lint
+do the tests pass => proj_test
+compile the project => proj_build
+execute deploy.sh => run_file file=deploy.sh
+which version of git is installed => ver cmd=git
+which docker => which cmd=docker
+open the manual for find => man cmd=find
+
+# ---- docker and git
+what containers are running => dk_ps
+restart the container cache => dk_restart name=cache
+follow the logs of the worker container => dk_follow name=worker
+open a shell inside the web container => dk_shell name=web
+docker images => dk_images
+start the compose stack => compose_up
+prune docker => dk_prune
+what branch is this => git_branch_cur
+show me the branches => git_branches
+put my changes aside => git_stash
+bring back my stashed changes => git_stash_pop
+take back my last commit => git_undo
+throw away all my uncommitted changes => git_discard
+add everything to git => git_add_all
+add and commit everything with message "release notes" => git_commit_all msg=[release notes]
+merge the hotfix branch => git_merge branch=hotfix
+get rid of the experiment branch => git_branch_del branch=experiment
+git clone git@github.com:me/dotfiles.git => git_clone url=git@github.com:me/dotfiles.git
+where does this repo push to => git_remote
+blame server.js => git_blame file=server.js
+what's staged => git_diff_staged
+push and set upstream => git_push_new
+list tags => git_tags
+who has the most commits => git_authors
+delete untracked files => git_clean
+init a git repository here => git_init
+
+# ---- single files and folders
+change the name of draft.md to post.md => rename old=draft.md new=post.md
+touch empty.txt => touch file=empty.txt
+add the line "127.0.0.1 dev.local" to /etc/hosts => append text=[127.0.0.1 dev.local] file=/etc/hosts
+symlink ~/dotfiles/vimrc to ~/.vimrc => link target=~/dotfiles/vimrc name=~/.vimrc
+make a backup of database.sqlite => backup file=database.sqlite
+what's the difference between old.conf and new.conf => diff a=old.conf b=new.conf
+md5 of installer.exe => md5 file=installer.exe
+when was notes.txt last modified => finfo file=notes.txt
+open ~/.ssh/config in vim => edit file=~/.ssh/config
+page through long.log => page file=long.log
+tree of src => tree path=src
+which directory am i in => pwd
+cd .. => cd_up
+go home => cd_home
+remove old.zip and tmp.txt => paths names=[old.zip and tmp.txt] | delete
+copy main.py to backup/ => paths names=main.py | copy to=backup/
+zip the folder project into project.zip => paths names=project | compress fmt=zip to=project.zip
+how much space does ~/.cache take => paths names=~/.cache | sizes
+make notes.txt read only => paths names=notes.txt | chmod mode=[read only]
+scp report.pdf to alice@fileserver:~/inbox => paths names=report.pdf | upload to=alice@fileserver:~/inbox
+
+# ---- files
+show me the big files in /var => files what=anyfile in=/var | larger | fshow
+remove old zip files in ~/backups => files what=anyfile in=~/backups | ext ext=zip | older | delete
+list hidden files in my home folder => files what=anyfile in=home | hidden | fshow
+files belonging to www-data under /var/www => files what=anyfile in=/var/www | owner user=www-data | fshow
+what changed after jan 5 in ~/notes => files what=anyfile in=~/notes | since date=[jan 5] | fshow
+everything in downloads except zip files => files what=anyfile in=downloads | not | ext ext=zip | fshow
+find where "def main" appears in the python files => files what=anyfile | ext ext=python | fgrep text=[def main]
+look for password in all yaml files under config => files what=anyfile in=config | ext ext=yaml | fgrep text=password
+change every http:// to https:// in the html files => files what=anyfile | ext ext=html | replace old=http:// new=https://
+make the names of all png files in icons uppercase => files what=anyfile in=icons | ext ext=png | rn_upper
+rename the txt files in notes to .md => files what=anyfile in=notes | ext ext=txt | rn_ext ext=.md
+move mp4 files bigger than 1gb in ~/Videos to the trash => files what=anyfile in=~/Videos | ext ext=mp4 | larger size=1gb | trash
+total lines across all rust files in src => files what=anyfile in=src | ext ext=rust | fcat | lcount
+what kinds of files are in ~/Documents => files what=anyfile in=~/Documents | by_ext
+which files in ~/Music are duplicates => files what=anyfile in=~/Music | dupes
+write the names of all csv files in data to list.txt => files what=anyfile in=data | ext ext=csv | fnames | save to=list.txt
+rsync the pdf files in reports to backup-box:/srv/reports => files what=anyfile in=reports | ext ext=pdf | upload to=backup-box:/srv/reports
+make the sh files in bin executable => files what=anyfile in=bin | ext ext=sh | chmod mode=executable
+delete the third biggest file in ~/tmp => files what=anyfile in=~/tmp | fsort key=size order=desc | fpick n=third | delete
+
+# ---- lines
+print lines 100 through 120 of big.log => lines of=big.log | lrange a=100 b=120 | lshow
+show line 7 of Makefile => lines of=Makefile | lline n=7 | lshow
+get the third column of report.tsv => lines of=report.tsv | col n=third sep=tab | lshow
+change dev to prod in settings.json => lines of=settings.json | lreplace old=dev new=prod | inplace
+word count of chapter1.md => lines of=chapter1.md | wcount
+count how often each line appears in votes.txt => lines of=votes.txt | lfreq | lshow
+number the lines of poem.txt => lines of=poem.txt | lnum | lshow
+shuffle playlist.txt => lines of=playlist.txt | lshuf | lshow
+sum the numbers in expenses.txt => lines of=expenses.txt | lsum | lshow
+show notes.txt without blank lines => lines of=notes.txt | lblank | lshow
+what git commands did i run => history | match text=git | lshow
+my last 5 commands => history | llast n=5 | lshow
+list env vars => env | lshow
+installed packages matching qt => pkgs | match text=qt | lshow
+search the kernel log for nvme => dmesg | match text=nvme | lshow
+show what's in the clipboard => clipboard | lshow
+
+# ---- shell, preferences, several steps
+what's JAVA_HOME set to => var_show name=JAVA_HOME
+export NODE_ENV=production => var_set name=NODE_ENV=production value=NODE_ENV=production
+put ~/go/bin on my path => path_add dir=~/go/bin
+alias ll='ls -la' => alias_make name=ll= cmd=[ls -la]
+calculate 1920 / 1080 => calc expr=[1920 / 1080]
+remind me in 5 minutes => timer in=[5 minutes]
+show my crontab => cron_list
+what am i running => procs | puser user=i | pshow
+stop asking me to confirm => pref key=confirm state=off
+pull the latest changes and run the tests => git_pull ;; proj_test
+create a folder named reports and copy all csv files into it => mkdir path=reports ;; files what=anyfile | ext ext=csv | copy to=reports
+
+# ---- follow-ups
+find mp3 files in ~/Music larger than 20mb => files what=anyfile in=~/Music | ext ext=mp3 | larger size=20mb | fshow
++ how many => files what=anyfile in=~/Music | ext ext=mp3 | larger size=20mb | fcount
++ move them to /mnt/usb => files what=anyfile in=~/Music | ext ext=mp3 | larger size=20mb | move to=/mnt/usb
+show the 10 newest files in ~/Downloads => files what=anyfile in=~/Downloads | fsort key=time order=desc | ftake n=10 | fshow
++ delete the first one => files what=anyfile in=~/Downloads | fsort key=time order=desc | ftake n=10 | fpick n=first | delete
+find yaml files containing password => files what=anyfile | ext ext=yaml | contains text=password | fshow
++ now in config => files what=anyfile in=config | ext ext=yaml | contains text=password | fshow
+list empty files => files what=anyfile | empty | fshow
++ trash them => files what=anyfile | empty | trash
+find log files older than 30 days in /var/log => files what=anyfile in=/var/log | ext ext=log | older age=[30 days] | fshow
++ make that 60 days => files what=anyfile in=/var/log | ext ext=log | older age=[60 days] | fshow
++ zip them up => files what=anyfile in=/var/log | ext ext=log | older age=[60 days] | compress fmt=zip
+status of the cups service => svc_status unit=cups
++ stop it => svc_stop unit=cups
++ disable it => svc_disable unit=cups
+is there a package for neovim => pkg_search term=neovim
++ ok install it => pkg_install names=neovim
+cat todo.txt => view file=todo.txt
++ how many lines does it have => lines of=todo.txt | lcount
++ search it for urgent => lines of=todo.txt | match text=urgent | lshow
+show lines containing WARN in server.log => lines of=server.log | match text=WARN | lshow
++ without duplicates => lines of=server.log | match text=WARN | uniq | lshow
++ save that to warnings.txt => lines of=server.log | match text=WARN | uniq | save to=warnings.txt
+is chrome running => procs | pname name=chrome | pshow
++ force kill it => procs | pname name=chrome | kill force=hard
+! docker ps
++ run that again => again
+! systemctl restart nginx
++ sudo that => sudo | again
+! journalctl -b
++ grep that for error => last | match text=error | lshow
+! ls ~/Downloads
++ count the lines => last | lcount
+! python train.py
++ time it => time_last
+ping 192.168.1.1 => ping host=192.168.1.1
++ ssh into it => ssh host=192.168.1.1
+create a branch called fix-login => git_new_branch branch=fix-login
++ delete that branch => git_branch_del branch=fix-login
+make a new folder called releases => mkdir path=releases
++ cd into it => cd path=releases
+show the logs of the db container => dk_logs name=db
++ stop it => dk_stop name=db
+who is using port 8000 => port n=8000 | pshow
++ kill the process on it => port n=8000 | kill force=soft
+find pdfs in ~/papers => files what=anyfile in=~/papers | ext ext=pdfs | fshow
++ install zathura => pkg_install names=zathura
