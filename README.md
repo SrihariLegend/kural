@@ -12,11 +12,6 @@ $ : delete log files older than 30 days in ~/Downloads        the line turns vio
   this removes or stops things: read it before pressing Enter
 $ find ~/Downloads -type f -iname '*.log' -mtime +29 -delete   now on your prompt: edit it, run it, or Ctrl-C
 ```
-
-**The name.** A *kural* (குறள்) is the two-line verse form of the Thirukkural: a whole idea in very few words.
-kural does the same with a request: one exact command from a tiny model. In Tamil the word also means "voice".
-The mascot is a coral: small, patient, and built from very many tiny pieces that fit together.
-
 ## Use
 
 Add one line to `~/.bashrc`, then open a new terminal:
