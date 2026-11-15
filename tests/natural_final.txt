@@ -60,7 +60,7 @@ show memory usage => mem_free
 what ip do i have => my_ip
 which ports are listening => ports
 make a new directory called releases/v2 => mkdir path=releases/v2
-cd into ~/Projects/plainsh => cd path=~/Projects/plainsh
+cd into ~/Projects/kural => cd path=~/Projects/kural
 show the contents of ~/.bashrc => view file=~/.bashrc
 tail /var/log/nginx/error.log live => follow file=/var/log/nginx/error.log
 make install.sh executable => make_exec file=install.sh

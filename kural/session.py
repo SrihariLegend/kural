@@ -3,8 +3,8 @@
 It holds what happened in this terminal, one event per line, tab-separated:
 
   run   <time>  <exit status>  <folder>  <command>      every command that was run (written by the shell hook)
-  ask   <time>  <folder>  <request>                     a plainsh request that was accepted
-  got   <program as JSON>                               how plainsh read it
+  ask   <time>  <folder>  <request>                     a kural request that was accepted
+  got   <program as JSON>                               how kural read it
   cmd   <command>                                       the command it offered
   fix   <request>  <offered>  <command actually run>    the user edited the offer before running it
   pref  <key>  <on|off>                                 a preference set during the session
@@ -23,7 +23,7 @@ MAX_RAW_WORDS = 12
 
 def runtime_dir():
     base = os.environ.get("XDG_RUNTIME_DIR")
-    d = os.path.join(base, "plainsh") if base and os.path.isdir(base) else f"/tmp/plainsh-{os.getuid()}"
+    d = os.path.join(base, "kural") if base and os.path.isdir(base) else f"/tmp/kural-{os.getuid()}"
     os.makedirs(d, mode=0o700, exist_ok=True)
     return d
 
@@ -59,7 +59,7 @@ class State:
 
 def _config_prefs():
     prefs = {}
-    path = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "plainsh", "config")
+    path = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "kural", "config")
     try:
         for line in open(path):
             k, _, v = line.strip().partition("=")

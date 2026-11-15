@@ -1,10 +1,10 @@
-"""Command line: plainsh "delete log files older than 30 days in ~/Downloads"
+"""Command line: kural "delete log files older than 30 days in ~/Downloads"
 
 Prints the bash command for the request. It never runs anything itself.
-  plainsh REQUEST...           the command, on stdout
-  plainsh -v REQUEST...        also the reading of the request, confidence and alternatives (stderr)
-  plainsh --shell REQUEST...   for the shell hook: line 1 command, line 2 risk (0-2), line 3 confidence, line 4 reading
-  plainsh --serve              answer requests from shell hooks until idle (started by the hook, not by hand)
+  kural REQUEST...           the command, on stdout
+  kural -v REQUEST...        also the reading of the request, confidence and alternatives (stderr)
+  kural --shell REQUEST...   for the shell hook: line 1 command, line 2 risk (0-2), line 3 confidence, line 4 reading
+  kural --serve              answer requests from shell hooks until idle (started by the hook, not by hand)
 Options: --session FILE (the terminal's session file, for follow-ups), --cwd DIR
 """
 import os
@@ -131,7 +131,7 @@ def answer(text, cwd=None, session_path=None, final=True, live=True, pm=None, ch
 def main(argv=None):
     args = list(sys.argv[1:] if argv is None else argv)
     verbose = shell = False
-    sess = os.environ.get("PLAINSH_SESSION")
+    sess = os.environ.get("KURAL_SESSION")
     cwd = None
     while args and args[0].startswith("-") and args[0] != "--":
         flag = args.pop(0)
@@ -154,7 +154,7 @@ def main(argv=None):
         return 2
     results = answer(text, cwd=cwd or os.getcwd(), session_path=sess)
     if not results:
-        print("plainsh: that is outside what I can do so far", file=sys.stderr)
+        print("kural: that is outside what I can do so far", file=sys.stderr)
         return 1
     best = results[0]
     if shell:

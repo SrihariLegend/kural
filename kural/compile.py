@@ -23,7 +23,7 @@ LINE_SOURCES = ("lines", "history", "env", "pkgs", "services", "journal", "dmesg
 
 
 class Unsupported(Exception):
-    """The request is outside what plainsh can do."""
+    """The request is outside what kural can do."""
 
 
 def _file(text, env):

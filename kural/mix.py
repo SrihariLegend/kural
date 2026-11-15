@@ -1,9 +1,9 @@
-"""Whole training requests: every kind of request plainsh understands, mixed in the proportions used for
+"""Whole training requests: every kind of request kural understands, mixed in the proportions used for
 training, plus follow-ups that build on the previous request ("delete them", "same but in ~/src", "go there").
 
 gen.py builds file, line and process pipelines. This module adds the stand-alone commands (from the
 table in commands.py), requests about named files, the extra line and process requests, follow-ups,
-and the requests plainsh should decline.
+and the requests kural should decline.
 """
 import random
 
@@ -693,7 +693,7 @@ def pref_request(q):
     return [("pref", {"key": key[0], "state": key[1]})]
 
 
-# --------------------------------------------------------------------------- requests plainsh cannot do
+# --------------------------------------------------------------------------- requests kural cannot do
 OUTSIDE = """convert {f} to {e}|convert {f} to a gif|resize {f} to {n}x{n}|trim the first {n} seconds of {f}|merge all pdfs into one
 turn {f} into a pdf|rotate {f} by {n} degrees|extract the audio from {f}|make a thumbnail of {f}|compress the video {f}|crop {f}
 join {f} and {f2} into one video|speed up {f} by {n}x|make {f} black and white|ocr {f}|print {f} on the printer|scan a document

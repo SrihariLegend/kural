@@ -20,7 +20,7 @@ _W = None
 def weights(path=None):
     global _W
     if _W is None:
-        path = path or os.environ.get("PLAINSH_WEIGHTS") or os.path.join(os.path.dirname(__file__), "weights.npz")
+        path = path or os.environ.get("KURAL_WEIGHTS") or os.path.join(os.path.dirname(__file__), "weights.npz")
         with np.load(path) as z:
             _W = {k: z[k].astype(np.float32) for k in z.files}
         _W["#enc"] = sum(1 for k in _W if k.startswith("enc.") and k.endswith(".n1.weight"))

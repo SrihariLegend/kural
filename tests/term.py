@@ -22,18 +22,18 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class Term:
     def __init__(self, rows=24, cols=100, cwd=None):
-        self.tmp = tempfile.mkdtemp(prefix="plainsh-term-")
+        self.tmp = tempfile.mkdtemp(prefix="kural-term-")
         os.chmod(self.tmp, 0o700)
         rc = os.path.join(self.tmp, "rc")
         with open(rc, "w") as f:
-            f.write(f"PS1='[t \\W]\\$ '\nHISTFILE={self.tmp}/hist\nsource {ROOT}/plainsh/shell/plainsh.bash\n")
+            f.write(f"PS1='[t \\W]\\$ '\nHISTFILE={self.tmp}/hist\nsource {ROOT}/kural/shell/kural.bash\n")
         os.mkdir(os.path.join(self.tmp, "bin"))
-        launcher = os.path.join(self.tmp, "bin", "plainsh")
+        launcher = os.path.join(self.tmp, "bin", "kural")
         with open(launcher, "w") as f:
-            f.write(f"#!/bin/sh\nexec env PYTHONPATH={ROOT} python3 -m plainsh.cli \"$@\"\n")
+            f.write(f"#!/bin/sh\nexec env PYTHONPATH={ROOT} python3 -m kural.cli \"$@\"\n")
         os.chmod(launcher, 0o755)
         env = dict(os.environ, XDG_RUNTIME_DIR=self.tmp, PATH=self.tmp + "/bin:" + os.environ["PATH"], TERM="xterm-256color",
-                   LANG="en_US.UTF-8", PLAINSH_BIN=launcher)
+                   LANG="en_US.UTF-8", KURAL_BIN=launcher)
         env.pop("PROMPT_COMMAND", None)
         self.screen = pyte.Screen(cols, rows)
         self.stream = pyte.ByteStream(self.screen)
@@ -78,7 +78,7 @@ class Term:
         return []
 
     def session(self):
-        d = os.path.join(self.tmp, "plainsh")
+        d = os.path.join(self.tmp, "kural")
         out = []
         for name in sorted(os.listdir(d)) if os.path.isdir(d) else []:
             if name.startswith("s."):
@@ -92,7 +92,7 @@ class Term:
             os.close(self.fd)
         except OSError:
             pass
-        pidfile = os.path.join(self.tmp, "plainsh", "serve.pid")
+        pidfile = os.path.join(self.tmp, "kural", "serve.pid")
         if os.path.exists(pidfile):
             try:
                 os.kill(int(open(pidfile).read().strip() or 0), 15)
@@ -108,7 +108,7 @@ def show(t, title):
 
 
 if __name__ == "__main__":
-    work = tempfile.mkdtemp(prefix="plainsh-work-")
+    work = tempfile.mkdtemp(prefix="kural-work-")
     for name in ("a.pdf", "b.pdf", "notes.txt", "src/x.py", "src/y.py"):
         os.makedirs(os.path.dirname(os.path.join(work, name)) or work, exist_ok=True)
         open(os.path.join(work, name), "w").write("hello\n")

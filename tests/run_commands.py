@@ -1,4 +1,4 @@
-"""Run the commands plainsh generates, for real, in a scratch folder, and check what they did.
+"""Run the commands kural generates, for real, in a scratch folder, and check what they did.
 
   python tests/run_commands.py
 
@@ -13,7 +13,7 @@ import tempfile
 import time
 
 sys.path.insert(0, ".")
-from plainsh import compile as C
+from kural import compile as C
 
 FILES = {
     "a.txt": "apple\nbanana\napple\n\ncherry\n", "B.TXT": "TODO one\nfoo bar\n", "notes one.txt": "foo\nfoo\nbaz\n",
@@ -25,7 +25,7 @@ FILES = {
 
 
 def fresh():
-    d = tempfile.mkdtemp(prefix="plainsh-run-")
+    d = tempfile.mkdtemp(prefix="kural-run-")
     for name, text in FILES.items():
         p = os.path.join(d, name)
         os.makedirs(os.path.dirname(p), exist_ok=True)

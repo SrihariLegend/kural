@@ -1,6 +1,6 @@
 """Train the parser on synthetic requests and write the weights the run-time loads.
 
-  python -m plainsh.train [--n 400000] [--epochs 12] [--out plainsh/weights.npz]
+  python -m kural.train [--n 400000] [--epochs 12] [--out kural/weights.npz]
 """
 import argparse
 import math
@@ -100,7 +100,7 @@ def main():
     ap.add_argument("--epochs", type=int, default=12)
     ap.add_argument("--bs", type=int, default=512)
     ap.add_argument("--lr", type=float, default=1.5e-3)
-    ap.add_argument("--out", default="plainsh/weights.npz")
+    ap.add_argument("--out", default="kural/weights.npz")
     ap.add_argument("--seed", type=int, default=1)
     a = ap.parse_args()
     dev = "cuda" if torch.cuda.is_available() else "cpu"

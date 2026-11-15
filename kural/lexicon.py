@@ -5,7 +5,7 @@ This is a plain check that sits beside it: a reading is only accepted if at leas
 request has been seen, in training, in requests for some stage of that reading. A request whose words are all
 foreign to the reading is declined instead.
 
-  python -m plainsh.lexicon [N]      rebuild plainsh/lexicon.json from N generated requests (default 400000)
+  python -m kural.lexicon [N]      rebuild kural/lexicon.json from N generated requests (default 400000)
 
 The table is built from the same generator the parser is trained on, so the two always agree on vocabulary.
 """

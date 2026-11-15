@@ -14,8 +14,8 @@ import sys
 import time
 
 sys.path.insert(0, ".")
-from plainsh import compile as C
-from plainsh import cli, ir, tok
+from kural import compile as C
+from kural import cli, ir, tok
 
 
 def parse_gold(text):

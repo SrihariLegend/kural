@@ -1,4 +1,4 @@
-# Requests plainsh 0.2 is not built to handle. The right behaviour is to decline. Hand-written, not from the generator's list.
+# Requests kural 0.2 is not built to handle. The right behaviour is to decline. Hand-written, not from the generator's list.
 convert video.mp4 to mp3
 resize photo.jpg to 800x600
 what's the weather tomorrow

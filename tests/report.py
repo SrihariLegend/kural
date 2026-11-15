@@ -11,8 +11,8 @@ import time
 sys.path.insert(0, ".")
 sys.path.insert(0, "tests")
 import evaluate
-from plainsh import cli, run
-from plainsh import compile as C
+from kural import cli, run
+from kural import compile as C
 
 
 def score(path):
@@ -55,9 +55,9 @@ def main():
     per = 1000 * (time.time() - t) / (5 * len(reqs))
     rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
     t = time.time()
-    subprocess.run([sys.executable, "-m", "plainsh.cli", "restart nginx"], capture_output=True, env=dict(os.environ, PYTHONPATH="."))
+    subprocess.run([sys.executable, "-m", "kural.cli", "restart nginx"], capture_output=True, env=dict(os.environ, PYTHONPATH="."))
     cold = 1000 * (time.time() - t)
-    w = os.path.getsize("plainsh/weights.npz") / 1e6
+    w = os.path.getsize("kural/weights.npz") / 1e6
     print(f"\nparsing: {per:.0f} ms per request once loaded; one-off call from the shell: {cold:.0f} ms; peak memory of this process: {rss:.0f} MB; weights file: {w:.1f} MB")
 
 

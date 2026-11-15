@@ -1,6 +1,6 @@
 # These 39 requests were written for version 0.1 as examples of what it could NOT do (it was meant to decline them).
 # Most are now in scope. The wording predates the 0.2 training phrasings, so this is a fairer check than v2_dev.txt.
-# "=> DECLINE" marks the ones that are still outside what plainsh does.
+# "=> DECLINE" marks the ones that are still outside what kural does.
 
 # ---- once outside
 rename report.pdf to final-report.pdf => rename old=report.pdf new=final-report.pdf
