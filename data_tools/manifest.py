@@ -147,7 +147,9 @@ def main() -> None:
               "are also excluded from the pretraining text.",
               f"- `data/pairs/nl2sh_alfa_train.jsonl`: {count_lines(PAIRS / 'nl2sh_alfa_train.jsonl'):,} "
               "NL2SH-ALFA training pairs (MIT, Westenfelder et al., NAACL 2025), **unverified** "
-              "(`verified: false`); 5 whose request equals a test request were removed.",
+              "(`verified: false`); 5 whose request equals a test request were removed. **7,153 rows are NL2Bash "
+              "requests (`in_nl2bash: true`, 492 from the NL2Bash test split): drop them before training if "
+              "NL2Bash is used as a test set.**",
               "- `data/eval/nl2sh_alfa/test.jsonl`: NL2SH-ALFA test, 300 requests x 2 reference commands "
               "(600 verified pairs), MIT.",
               "- `data/eval/nl2bash/`: NL2Bash (Lin et al., LREC 2018), all.nl/all.cm and the standard "

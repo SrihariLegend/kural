@@ -171,6 +171,8 @@ def main():
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--data", help="folder of kural-gen shards to stream instead of making data here")
     ap.add_argument("--held", help="held-out shards (with --data)")
+    ap.add_argument("--extra", help="JSON lines of extra examples {words, out, n} (e.g. filtered paraphrases), added to the in-process data")
+    ap.add_argument("--extra-repeat", type=int, default=1, help="how many times the extra examples are repeated")
     a, given = ap.parse_args(), {x.split("=")[0] for x in __import__("sys").argv[1:]}
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     t0 = time.time()
@@ -182,8 +184,16 @@ def main():
         print(f"data: {n_train:,} training requests streamed from {len(stream.files)} shard(s) in {a.data}, "
               f"{held[0].shape[0]:,} held out ({held_path if os.path.exists(held_path) else 'made here'}), on {dev}", flush=True)
     else:
-        train = to_device(build(a.n, a.seed), dev)
+        arrs = build(a.n, a.seed)
+        if a.extra:
+            import json as _json
+            ex = [(r["words"], r["out"], r["n"]) for r in map(_json.loads, open(a.extra))]
+            ex = [e for e in ex if len(e[0]) <= L_MAX and len(e[1]) <= ir.MAX_OUT] * a.extra_repeat
+            arrs = [np.concatenate([x, y]) for x, y in zip(arrs, featurise(ex))]
+            print(f"extra: {len(ex):,} examples from {a.extra} (repeated {a.extra_repeat}x)", flush=True)
+        train = to_device(arrs, dev)
         held = to_device(build(4000, 9999, procs=4), dev)
+        a.n = train[0].shape[0]
         n_train, steps_per_epoch = a.n, a.n // a.bs
         print(f"data: {a.n:,} training requests, 4,000 held out, built in {time.time() - t0:.0f}s on {dev}", flush=True)
     torch.manual_seed(a.seed)

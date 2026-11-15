@@ -1,0 +1,1502 @@
+[
+ {
+  "id": 0,
+  "command": "find . -type f",
+  "score": 0
+ },
+ {
+  "id": 1,
+  "command": "find . -type f ! -name '.*'",
+  "score": 0
+ },
+ {
+  "id": 2,
+  "command": "find . -type f -exec xdg-open {} \\;",
+  "score": 0
+ },
+ {
+  "id": 3,
+  "command": "cp -r -- /testbed/hello.php /testbed/hello-COPY.php",
+  "score": 1
+ },
+ {
+  "id": 4,
+  "command": "touch /testbed/test.txt",
+  "score": 1
+ },
+ {
+  "id": 5,
+  "command": "mkdir -p /testbed/test_dir",
+  "score": 1
+ },
+ {
+  "id": 6,
+  "command": "rm -- does_not_exist.txt",
+  "score": 1
+ },
+ {
+  "id": 7,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 8,
+  "command": "pwd",
+  "score": 1
+ },
+ {
+  "id": 9,
+  "command": "date",
+  "score": 1
+ },
+ {
+  "id": 10,
+  "command": "whoami",
+  "score": 1
+ },
+ {
+  "id": 11,
+  "command": "docker rmi fake_dir",
+  "score": 0
+ },
+ {
+  "id": 12,
+  "command": "pwd",
+  "score": 0
+ },
+ {
+  "id": 13,
+  "command": "printenv | sort",
+  "score": 0
+ },
+ {
+  "id": 14,
+  "command": "pwd",
+  "score": 0
+ },
+ {
+  "id": 15,
+  "command": "pwd",
+  "score": 0
+ },
+ {
+  "id": 16,
+  "command": "cat setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 17,
+  "command": "head -n 5 setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 18,
+  "command": "tail -n 5 setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 19,
+  "command": "sed -n '10p' setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 20,
+  "command": "command -v bash",
+  "score": 1
+ },
+ {
+  "id": 21,
+  "command": "history",
+  "score": 1
+ },
+ {
+  "id": 22,
+  "command": "journalctl -b --no-pager",
+  "score": 0
+ },
+ {
+  "id": 23,
+  "command": "uptime",
+  "score": 1
+ },
+ {
+  "id": 24,
+  "command": "sensors",
+  "score": 0
+ },
+ {
+  "id": 25,
+  "command": "ps -e -o pid,user,%cpu,%mem,comm",
+  "score": 0
+ },
+ {
+  "id": 26,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 27,
+  "command": "free -h",
+  "score": 0
+ },
+ {
+  "id": 28,
+  "command": "cat /etc/os-release",
+  "score": 0
+ },
+ {
+  "id": 29,
+  "command": "uname -r",
+  "score": 0
+ },
+ {
+  "id": 30,
+  "command": "hostname",
+  "score": 1
+ },
+ {
+  "id": 31,
+  "command": "ip -brief -4 addr",
+  "score": 0
+ },
+ {
+  "id": 32,
+  "command": "ip -brief -4 addr && journalctl -b --no-pager",
+  "score": 0
+ },
+ {
+  "id": 33,
+  "command": "nmcli -t -f active,ssid dev wifi | grep '^yes'",
+  "score": 0
+ },
+ {
+  "id": 34,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 35,
+  "command": "who",
+  "score": 0
+ },
+ {
+  "id": 36,
+  "command": "who && df -h",
+  "score": 0
+ },
+ {
+  "id": 37,
+  "command": "openssl --version",
+  "score": 0
+ },
+ {
+  "id": 38,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 39,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 40,
+  "command": "grep -i -- console setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 41,
+  "command": "docker stats --no-stream && touch setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 42,
+  "command": "tar -czf hello.php.tar.gz /testbed/hello.php && touch /testbed/hello.php",
+  "score": 0
+ },
+ {
+  "id": 43,
+  "command": "tar -czf /testbed/hello.tar.tar.gz /testbed/hello.php",
+  "score": 0
+ },
+ {
+  "id": 44,
+  "command": "pacman -Qi curl 2>/dev/null || pacman -Si curl",
+  "score": 0
+ },
+ {
+  "id": 45,
+  "command": "crontab -l",
+  "score": 0
+ },
+ {
+  "id": 46,
+  "command": "date",
+  "score": 0
+ },
+ {
+  "id": 47,
+  "command": "ps -e -o pid,user,%cpu,%mem,comm && tree",
+  "score": 0
+ },
+ {
+  "id": 48,
+  "command": "pwd",
+  "score": 0
+ },
+ {
+  "id": 49,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 50,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 51,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 52,
+  "command": "crontab -l",
+  "score": 1
+ },
+ {
+  "id": 53,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 54,
+  "command": "lscpu",
+  "score": 1
+ },
+ {
+  "id": 55,
+  "command": "free -h",
+  "score": 0
+ },
+ {
+  "id": 56,
+  "command": "ssh --version",
+  "score": 0
+ },
+ {
+  "id": 57,
+  "command": "man bash && cd",
+  "score": 0
+ },
+ {
+  "id": 58,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 59,
+  "command": "lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS",
+  "score": 0
+ },
+ {
+  "id": 60,
+  "command": "find . -type f -size +100M",
+  "score": 0
+ },
+ {
+  "id": 61,
+  "command": "ln -s /testbed/hello.php /testbed/link",
+  "score": 1
+ },
+ {
+  "id": 62,
+  "command": "sudo chown nobody -- /testbed/test.txt",
+  "score": 0
+ },
+ {
+  "id": 63,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 64,
+  "command": "chmod a-w -- /testbed/test.txt",
+  "score": 1
+ },
+ {
+  "id": 65,
+  "command": "wc -m < setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 66,
+  "command": "sort setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 67,
+  "command": "awk '!seen[$0]++' setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 68,
+  "command": "nmcli -t -f active,ssid dev wifi | grep '^yes'",
+  "score": 0
+ },
+ {
+  "id": 69,
+  "command": "nmcli -t -f active,ssid dev wifi | grep '^yes'",
+  "score": 0
+ },
+ {
+  "id": 70,
+  "command": "cal && sleep 7776000 && notify-send 'Time is up'",
+  "score": 0
+ },
+ {
+  "id": 71,
+  "command": "systemctl list-units --type=service --state=running --no-pager --no-legend && systemctl list-units --type=service --state=running --no-pager --no-legend",
+  "score": 0
+ },
+ {
+  "id": 72,
+  "command": "systemd-analyze",
+  "score": 0
+ },
+ {
+  "id": 73,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 74,
+  "command": "systemctl list-units --type=service --state=running --no-pager --no-legend",
+  "score": 0
+ },
+ {
+  "id": 75,
+  "command": "pacman -Qq",
+  "score": 0
+ },
+ {
+  "id": 76,
+  "command": "checkupdates",
+  "score": 0
+ },
+ {
+  "id": 77,
+  "command": "sudo pacman -S users",
+  "score": 0
+ },
+ {
+  "id": 78,
+  "command": "journalctl -b --no-pager",
+  "score": 0
+ },
+ {
+  "id": 79,
+  "command": "find . -type f -iname /usr/local/bin/my_script.sh",
+  "score": 0
+ },
+ {
+  "id": 80,
+  "command": "dig +short google.com",
+  "score": 0
+ },
+ {
+  "id": 81,
+  "command": "pwd && find . -type f -iname /usr/local/bin/my_script.sh",
+  "score": 0
+ },
+ {
+  "id": 82,
+  "command": "sed -n '1,10p' users",
+  "score": 0
+ },
+ {
+  "id": 83,
+  "command": "file setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 84,
+  "command": "cat -n setup_nl2b_fs_1.sh && cut -f40 setup_nl2b_fs_1.sh | awk '{s += $1} END {print s}'",
+  "score": 0
+ },
+ {
+  "id": 85,
+  "command": "printenv | sort",
+  "score": 0
+ },
+ {
+  "id": 86,
+  "command": "ps -e --no-headers | wc -l",
+  "score": 0
+ },
+ {
+  "id": 87,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 88,
+  "command": "tree && ps -e --no-headers | wc -l",
+  "score": 0
+ },
+ {
+  "id": 89,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 90,
+  "command": "uptime && systemctl hibernate",
+  "score": 0
+ },
+ {
+  "id": 91,
+  "command": "tree -L 2",
+  "score": 1
+ },
+ {
+  "id": 92,
+  "command": "wc -w < setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 93,
+  "command": "find . -type f | wc -l",
+  "score": 0
+ },
+ {
+  "id": 94,
+  "command": "sed -n '1p' setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 95,
+  "command": "tail -n 10 setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 96,
+  "command": "sed -n '3,5p' setup_nl2b_fs_1.sh",
+  "score": 1
+ },
+ {
+  "id": 97,
+  "command": "shuf setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 98,
+  "command": "wc -w < setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 99,
+  "command": "find . -type f -empty && find . -mindepth 1 -type d",
+  "score": 0
+ },
+ {
+  "id": 100,
+  "command": "sort setup_nl2b_fs_1.sh | uniq -c | sort -rn | head -n 20",
+  "score": 0
+ },
+ {
+  "id": 101,
+  "command": "sort setup_nl2b_fs_1.sh",
+  "score": 0
+ },
+ {
+  "id": 102,
+  "command": "tr '[:lower:]' '[:upper:]' < setup_nl2b_fs_1.sh && cd ..",
+  "score": 0
+ },
+ {
+  "id": 103,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 104,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 105,
+  "command": "echo hello > world.txt",
+  "score": 1
+ },
+ {
+  "id": 106,
+  "command": "curl -s https://ifconfig.me",
+  "score": 0
+ },
+ {
+  "id": 107,
+  "command": "awk 'BEGIN {print 0}' && md5sum /testbed",
+  "score": 0
+ },
+ {
+  "id": 108,
+  "command": "md5sum md5 && find /testbed/dir2/subdir2 -type f -print0 | sort -z | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 109,
+  "command": "md5sum contents && find . -type f -print0 | sort -z | tr '\\0' '\\n' && printenv FILES",
+  "score": 0
+ },
+ {
+  "id": 110,
+  "command": "md5sum sorted && md5sum .py",
+  "score": 0
+ },
+ {
+  "id": 111,
+  "command": "find . -type f -iname '*.txt' -print0 | du -ch --files0-from=- | tail -n 1 && hostname",
+  "score": 0
+ },
+ {
+  "id": 112,
+  "command": "find /testbed -type f -iname '*.php' -exec chmod 755 {} + && tree",
+  "score": 0
+ },
+ {
+  "id": 113,
+  "command": "pgrep -a -i -- shell && pgrep -a -i -- True",
+  "score": 0
+ },
+ {
+  "id": 114,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 115,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 116,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 117,
+  "command": "find /testbed -type f -iname '*FooBar*' -exec cp -t /testbed/dir3/subdir1/subsubdir1/tmp {} +",
+  "score": 0
+ },
+ {
+  "id": 118,
+  "command": "find /testbed -type f -iname '*.txt' -exec du -sh {} + | sort -rh && find . -type f -print0 | xargs -0 -r grep -lZ -- another | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 119,
+  "command": "cut -d, -f16 /testbed/textfile7.txt",
+  "score": 0
+ },
+ {
+  "id": 120,
+  "command": "find /testbed -type f -iname file.txt -exec cp -t / {} + && sudo find . -mindepth 1 -type d -exec ls -lhd {} + && journalctl -b --no-pager",
+  "score": 0
+ },
+ {
+  "id": 121,
+  "command": "find . -type f -iname '*FooBar*' -exec cp -t /testbed/dir3/subdir1/subsubdir1/tmp {} +",
+  "score": 0
+ },
+ {
+  "id": 122,
+  "command": "find /testbed -maxdepth 1 -type f -iname '*.c' -exec cat {} + | wc -l",
+  "score": 1
+ },
+ {
+  "id": 123,
+  "command": "find . -type f -iname '*php' -exec cat {} + | wc -l && find . -maxdepth 1 -mindepth 1 -type d",
+  "score": 0
+ },
+ {
+  "id": 124,
+  "command": "find /testbed -maxdepth 1 -type f -iname '*.php' -exec cat {} + | wc -l",
+  "score": 0
+ },
+ {
+  "id": 125,
+  "command": "find /testbed -type f -iname '*.py' -mtime +89 -exec sha256sum {} +",
+  "score": 0
+ },
+ {
+  "id": 126,
+  "command": "find /testbed -type f -iname '*.html' -print0 | xargs -0 -r grep -lZ -- foo | tr -cd '\\0' | wc -c",
+  "score": 1
+ },
+ {
+  "id": 127,
+  "command": "find /testbed -type f -iname '*.php' | wc -l && tree && chmod 755 -- tree",
+  "score": 0
+ },
+ {
+  "id": 128,
+  "command": "find /testbed -type f -exec cat {} + | wc -l && tree",
+  "score": 0
+ },
+ {
+  "id": 129,
+  "command": "find . -type f -size +100M | wc -l && tree '${DIRECTORY}'",
+  "score": 0
+ },
+ {
+  "id": 130,
+  "command": "find /testbed -type f | wc -l && tree",
+  "score": 0
+ },
+ {
+  "id": 131,
+  "command": "find /testbed -type f -iname '*.gz' -exec cat {} + | wc -l && tree",
+  "score": 0
+ },
+ {
+  "id": 132,
+  "command": "find /testbed -type f | wc -l",
+  "score": 1
+ },
+ {
+  "id": 133,
+  "command": "find /testbed -type f -iname '*.php' -exec cat {} + | wc -l",
+  "score": 0
+ },
+ {
+  "id": 134,
+  "command": "find /testbed -type f -iname '*.php' -print0 | sort -z -r | xargs -0 -r cat -- | wc -l",
+  "score": 0
+ },
+ {
+  "id": 135,
+  "command": "find /etc/networks -type f | wc -l && find . -type f -print0 | sort -z -r | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 136,
+  "command": "find /testbed -maxdepth 1 -type f -iname '*.php' -exec cat {} + | wc -l",
+  "score": 1
+ },
+ {
+  "id": 137,
+  "command": "find /testbed -type f \\( -iname '*.php' -o -iname '*.js' \\) -exec cat {} + | wc -l",
+  "score": 1
+ },
+ {
+  "id": 138,
+  "command": "touch abc.txt && find testbed -mindepth 1 -type d -iname dir1",
+  "score": 0
+ },
+ {
+  "id": 139,
+  "command": "mkdir -p logs.tar.gz && find . -type f -iname '*.log' -mtime +0 -user Ubuntu",
+  "score": 0
+ },
+ {
+  "id": 140,
+  "command": "find /testbed/dir3/subdir1/subsubdir1/tmp -type f -mtime +1 -delete",
+  "score": 1
+ },
+ {
+  "id": 141,
+  "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 142,
+  "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 143,
+  "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 144,
+  "command": "find /testbed -maxdepth 1 -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 145,
+  "command": "find testbed -type f -iname '*.java' -print0 | xargs -0 -r grep -lZ -- Hello | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 146,
+  "command": "find /testbed -mindepth 1 -type d -print0 | xargs -0 -r sha256sum | sort | uniq -w64 --all-repeated=separate && tree",
+  "score": 0
+ },
+ {
+  "id": 147,
+  "command": "find testbed/dir1 -type f && curl -LO testbed/dir2",
+  "score": 0
+ },
+ {
+  "id": 148,
+  "command": "find /testbed -maxdepth 1 -type f -print0 | xargs -0 -r grep -lZ -- Hello | xargs -0 -r sha256sum | sort | uniq -w64 --all-repeated=separate",
+  "score": 0
+ },
+ {
+  "id": 149,
+  "command": "find /testbed -type f -iname '*.java' -exec cat {} + | wc -l",
+  "score": 1
+ },
+ {
+  "id": 150,
+  "command": "ln -s / FooBar",
+  "score": 1
+ },
+ {
+  "id": 151,
+  "command": "find /testbed/dir1 -type f -print0 | xargs -0 -r grep -lZ -- sticky | xargs -0 -r chmod 553 --",
+  "score": 0
+ },
+ {
+  "id": 152,
+  "command": "find /testbed -type f -iname '*.php' && grep -rni -- world .",
+  "score": 0
+ },
+ {
+  "id": 153,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 154,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 155,
+  "command": "ls -lah /system",
+  "score": 0
+ },
+ {
+  "id": 156,
+  "command": "find . -maxdepth 1 -type f && tree /system/folder2",
+  "score": 0
+ },
+ {
+  "id": 157,
+  "command": "find /system -maxdepth 1 -mindepth 1 -type d -iname '*.out' -print0 | xargs -0 -r grep -lZ -- '*.out' | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 158,
+  "command": "find /system -type f -iname '*.txt' -delete && git switch prompt",
+  "score": 0
+ },
+ {
+  "id": 159,
+  "command": "find /system/folder3/temp -mindepth 1 -type d -empty -print0 | tar --null -czf archive.tar.gz -T -",
+  "score": 0
+ },
+ {
+  "id": 160,
+  "command": "find /system/folder3/temp -mindepth 1 -type d -empty -print0 | tar --null -czf archive.tar.gz -T - && git commit -m error && pgrep -a -i -- error",
+  "score": 0
+ },
+ {
+  "id": 161,
+  "command": "find /system/folder1 -maxdepth 1 -type f -iname '*.txt' -print0 | tar --null -czf archive.tar.gz -T -",
+  "score": 0
+ },
+ {
+  "id": 162,
+  "command": "o=special n=regular; find /system/folder2 -type f -print0 | while IFS= read -r -d '' f; do d=$(dirname -- \"$f\") b=$(basename -- \"$f\"); t=\"$d/${b//\"$o\"/$n}\"; [ \"$f\" = \"$t\" ] || mv -n -- \"$f\" \"$t\"; done",
+  "score": 0
+ },
+ {
+  "id": 163,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 164,
+  "command": "find . -maxdepth 1 -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 20 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 165,
+  "command": "find /system/folder2.tar.gz -maxdepth 1 -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 20 | cut -z -f2- | xargs -0 -r du -sh -- && grep -rni -- special .",
+  "score": 0
+ },
+ {
+  "id": 166,
+  "command": "sed '1d' system/folder3/temp/temp1/text1.txt && ps -e -o pid,user,%cpu,%mem,comm --sort=-%mem",
+  "score": 0
+ },
+ {
+  "id": 167,
+  "command": "find /system/folder1 -type f -iname '*.doc' -delete && tree",
+  "score": 0
+ },
+ {
+  "id": 168,
+  "command": "find /system/folder1 -type f -iname '*.log' -delete && tree",
+  "score": 0
+ },
+ {
+  "id": 169,
+  "command": "find /system -maxdepth 1 -type f -iname '*.txt' -delete",
+  "score": 1
+ },
+ {
+  "id": 170,
+  "command": "find /system/folder3/backup_dbg -type f -iname '*.sql' -mtime +24 -delete",
+  "score": 1
+ },
+ {
+  "id": 171,
+  "command": "find /system/folder1 -type f -iname '*.txt' -mmin +5 -delete",
+  "score": 1
+ },
+ {
+  "id": 172,
+  "command": "find /system/folder1 -type f -iname '*.txt' ! -iname keep.txt -mmin +5 -delete",
+  "score": 1
+ },
+ {
+  "id": 173,
+  "command": "find /system/folder1 -type f -iname '*.sh' -iname 'new*' -delete",
+  "score": 1
+ },
+ {
+  "id": 174,
+  "command": "find /system -type f \\( -iname '*.a.out' -o -iname '*.core' \\) -delete",
+  "score": 0
+ },
+ {
+  "id": 175,
+  "command": "tail -n 5 /system/folder1/data.csv",
+  "score": 0
+ },
+ {
+  "id": 176,
+  "command": "find /system -mindepth 1 -type d -iname temp -exec rm -r {} + && tree",
+  "score": 0
+ },
+ {
+  "id": 177,
+  "command": "find /system/folder3/temp -type f -empty -delete && find . -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 20 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 178,
+  "command": "rm -- a.out '*.o' && tree",
+  "score": 0
+ },
+ {
+  "id": 179,
+  "command": "find . -type f -delete && tree /system/folder3/temp && zip -qr .DS_Store.zip .DS_Store ._.DS_Store '._*' .TemporaryItems or .apdisk",
+  "score": 0
+ },
+ {
+  "id": 180,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 181,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 182,
+  "command": "find /system -type f -size -1k -delete",
+  "score": 0
+ },
+ {
+  "id": 183,
+  "command": "find /system -maxdepth 1 -type f -mtime +30 -delete",
+  "score": 0
+ },
+ {
+  "id": 184,
+  "command": "tac /system/folder3/temp/temp1/text1.txt",
+  "score": 0
+ },
+ {
+  "id": 185,
+  "command": "find /system -type f -size -100k -delete",
+  "score": 1
+ },
+ {
+  "id": 186,
+  "command": "diff -u /system/folder1 /system/folder2",
+  "score": 0
+ },
+ {
+  "id": 187,
+  "command": "find . -type f -size -1M -print0 | xargs -0 -r grep -lZ -- path | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 188,
+  "command": "find /system -mindepth 1 -type d | wc -l",
+  "score": 0
+ },
+ {
+  "id": 189,
+  "command": "find /system/folder1 -type f -mtime -60 -print0 | tar --null -czf /mytarfile.tgz -T - && awk 'BEGIN {print 2023-01-01   0}' && awk 'BEGIN {print 0}'",
+  "score": 0
+ },
+ {
+  "id": 190,
+  "command": "ln -s / folder1",
+  "score": 1
+ },
+ {
+  "id": 191,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 192,
+  "command": "find /system -type f -iname '*.txt'",
+  "score": 0
+ },
+ {
+  "id": 193,
+  "command": "find /system -maxdepth 1 -type f",
+  "score": 0
+ },
+ {
+  "id": 194,
+  "command": "find /system -type f -print0 | xargs -0 -r grep -LZ -- text | xargs -0 -r -I{} rsync -avh --progress {} /system/folder3/backup_dbg/backup && find include -mindepth 1 -type d",
+  "score": 0
+ },
+ {
+  "id": 195,
+  "command": "mv /system/folder3/temp/temp1 /system/folder3/temp/temp1_old",
+  "score": 1
+ },
+ {
+  "id": 196,
+  "command": "wc -m < /system/text1.txt",
+  "score": 0
+ },
+ {
+  "id": 197,
+  "command": "tar -czf folder1.tar.gz /system/folder1 compress_folder1.tar.gz && awk 'BEGIN {print 2023-01-01   0}' && awk 'BEGIN {print 0}'",
+  "score": 0
+ },
+ {
+  "id": 198,
+  "command": "find http://example.com/textfile.txt -type f && find /system -type f -print0 | tar --null -czf textfile.txt.tar.gz -T -",
+  "score": 0
+ },
+ {
+  "id": 199,
+  "command": "find /system -type f -size +10c -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 200,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 201,
+  "command": "hostname && head -n 10 /etc/hosts && cut -f1 awk",
+  "score": 0
+ },
+ {
+  "id": 202,
+  "command": "find /workspace -type f -mtime -30",
+  "score": 1
+ },
+ {
+  "id": 203,
+  "command": "find /workspace -type f -iname '*.c' -size +1k",
+  "score": 1
+ },
+ {
+  "id": 204,
+  "command": "find /workspace -type f -mmin +60",
+  "score": 0
+ },
+ {
+  "id": 205,
+  "command": "find /workspace -type f -mmin +60",
+  "score": 1
+ },
+ {
+  "id": 206,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 207,
+  "command": "find /workspace -type f -exec du -sh {} + | sort -rh && awk 'BEGIN {print 0}'",
+  "score": 0
+ },
+ {
+  "id": 208,
+  "command": "find /workspace -type f -iname zero-length",
+  "score": 0
+ },
+ {
+  "id": 209,
+  "command": "find . -type f && find /workspace -type f -size +1k -delete",
+  "score": 0
+ },
+ {
+  "id": 210,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 211,
+  "command": "find /workspace -type f -exec chmod 777 {} +",
+  "score": 0
+ },
+ {
+  "id": 212,
+  "command": "find /workspace -type f -iname '*.txt' -exec ls -lhd {} +",
+  "score": 0
+ },
+ {
+  "id": 213,
+  "command": "find /workspace -type f -exec mv -t / {} + && find . -type f -exec mv -t / {} +",
+  "score": 0
+ },
+ {
+  "id": 214,
+  "command": "find /workspace -type f -mtime -1 -exec mv -t / {} +",
+  "score": 0
+ },
+ {
+  "id": 215,
+  "command": "find /workspace/dir1 -type f -print0 | xargs -0 -r grep -lZ -- hello | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 216,
+  "command": "du -h --max-depth=1 /workspace | sort -rh",
+  "score": 0
+ },
+ {
+  "id": 217,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 218,
+  "command": "find /workspace -mindepth 1 -type d -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 3 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 219,
+  "command": "sed -n '1p' /workspace/dir1/long.txt",
+  "score": 1
+ },
+ {
+  "id": 220,
+  "command": "sed '$d' /workspace/dir1/a.txt",
+  "score": 0
+ },
+ {
+  "id": 221,
+  "command": "find /workspace -type f",
+  "score": 0
+ },
+ {
+  "id": 222,
+  "command": "find /workspace -type f -size +1k -size -32k -exec du -sh {} + | sort -rh",
+  "score": 0
+ },
+ {
+  "id": 223,
+  "command": "find /workspace -type f -print0 | sort -z | tr '\\0' '\\n' && find . -type f",
+  "score": 0
+ },
+ {
+  "id": 224,
+  "command": "find /workspace -type f -size +1k && find . -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 1 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 225,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 226,
+  "command": "find workspace -mindepth 1 -type d -iname mysql",
+  "score": 0
+ },
+ {
+  "id": 227,
+  "command": "find /workspace -mindepth 1 -type d -print0 | xargs -0 -r sha256sum | sort | uniq -w64 --all-repeated=separate && tree",
+  "score": 0
+ },
+ {
+  "id": 228,
+  "command": "find /workspace -type f -iname old2.txt && date",
+  "score": 0
+ },
+ {
+  "id": 229,
+  "command": "find /workspace -type f -size +100M -exec grep -Hni -- hello {} + && git diff",
+  "score": 0
+ },
+ {
+  "id": 230,
+  "command": "md5sum /workspace && find . -type f -iname printed -printf '%T@\\t%p\\0' | sort -z -n | cut -z -f2- | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 231,
+  "command": "md5sum md5 && find /workspace -type f -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 232,
+  "command": "find /workspace -type f -size +100M -printf '%s\\t%p\\0' | sort -z -n | head -z -n 3 | cut -z -f2- | tr -cd '\\0' | wc -c && tree",
+  "score": 0
+ },
+ {
+  "id": 233,
+  "command": "cp -r -t /usr -- /workspace",
+  "score": 1
+ },
+ {
+  "id": 234,
+  "command": "find /workspace -type f -printf '%T@\\t%p\\0' | sort -z -n | head -z -n 1 | cut -z -f2- | xargs -0 -r ls -lhd -- && tree",
+  "score": 0
+ },
+ {
+  "id": 235,
+  "command": "find /workspace -mindepth 1 -type d -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 2 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 236,
+  "command": "find . -type f -exec ls -lhd {} + && find /workspace -type f -print0 | xargs -0 -r sha256sum | sort | uniq -w64 --all-repeated=separate",
+  "score": 0
+ },
+ {
+  "id": 237,
+  "command": "find /workspace/files.txt -mindepth 1 -type d -print0 | xargs -0 -r sha256sum | sort | uniq -w64 --all-repeated=separate",
+  "score": 1
+ },
+ {
+  "id": 238,
+  "command": "find /workspace/files.txt -maxdepth 1 -type f -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 239,
+  "command": "find /workspace -type f ! -empty -name '.*'",
+  "score": 0
+ },
+ {
+  "id": 240,
+  "command": "wc -l < /workspace/dir1/long.txt && cat /workspace/dir1/terminate.txt",
+  "score": 0
+ },
+ {
+  "id": 241,
+  "command": "wc -l < /workspace/dir1/terminate.txt && sed -n '1,1p' /workspace/dir1/long.txt && git diff",
+  "score": 0
+ },
+ {
+  "id": 242,
+  "command": "grep -v '^[[:space:]]*$' /workspace/dir1/a.txt && find . -type f ! -empty -print0 | while IFS= read -r -d '' f; do d=$(dirname -- \"$f\") b=$(basename -- \"$f\"); t=\"$d/${b// /_}\"; [ \"$f\" = \"$t\" ] || mv -n -- \"$f\" \"$t\"; done",
+  "score": 0
+ },
+ {
+  "id": 243,
+  "command": "mkdir -p ~/newlinks && find /workspace/results.txt -maxdepth 1 -type f",
+  "score": 0
+ },
+ {
+  "id": 244,
+  "command": "find /workspace -type f -name '.*' -delete",
+  "score": 1
+ },
+ {
+  "id": 245,
+  "command": "sudo mv -- /workspace/dir1/long.txt /workspace/dir1/long.txt && df -h",
+  "score": 0
+ },
+ {
+  "id": 246,
+  "command": "git diff && find /workspace/dir1 -type f && export workspacedir2=/workspace/dir2",
+  "score": 0
+ },
+ {
+  "id": 247,
+  "command": "du -sh -- /workspace/dir1/sum.c",
+  "score": 0
+ },
+ {
+  "id": 248,
+  "command": "journalctl -b --no-pager -u slash-separated -n 10 > /workspace/dir1/file.txt",
+  "score": 0
+ },
+ {
+  "id": 249,
+  "command": "du -h --max-depth=1 . | sort -rh && find /workspace -mindepth 1 -type d -iname files/directories -printf '%s\\t%p\\0' | sort -z -nr | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 250,
+  "command": "find /workspace -type f -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 251,
+  "command": "sort -r /workspace/dir1/long.txt",
+  "score": 0
+ },
+ {
+  "id": 252,
+  "command": "touch Icon && nmcli -t -f active,ssid dev wifi | grep '^yes'",
+  "score": 0
+ },
+ {
+  "id": 253,
+  "command": "ln -s /workspace/dir1 root",
+  "score": 0
+ },
+ {
+  "id": 254,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 255,
+  "command": "grep -rni -- insensitively /workspace && tree && wl-paste",
+  "score": 0
+ },
+ {
+  "id": 256,
+  "command": "find /workspace -type f -iname '*.gz' -print0 | tar --null -czf archive.tar.gz -T -",
+  "score": 0
+ },
+ {
+  "id": 257,
+  "command": "tar -xf /workspace/archive.tar.gz && tar -xf archive -C /backup",
+  "score": 0
+ },
+ {
+  "id": 258,
+  "command": "ln -s /workspace/dir1/terminate.txt /workspace/test",
+  "score": 1
+ },
+ {
+  "id": 259,
+  "command": "pgrep -a -i -- build && uname -r",
+  "score": 0
+ },
+ {
+  "id": 260,
+  "command": "tac 127.0.0.1",
+  "score": 0
+ },
+ {
+  "id": 261,
+  "command": "find . -type f -exec ls -lhd {} +",
+  "score": 0
+ },
+ {
+  "id": 262,
+  "command": "hostname",
+  "score": 0
+ },
+ {
+  "id": 263,
+  "command": "printenv | sort && pgrep -a -i -- semicolons",
+  "score": 0
+ },
+ {
+  "id": 264,
+  "command": "tree && pgrep -c -i -- alongside",
+  "score": 0
+ },
+ {
+  "id": 265,
+  "command": "mkdir -p intermediate && mkdir -p required && mkdir -p subsubdir",
+  "score": 1
+ },
+ {
+  "id": 266,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 267,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 268,
+  "command": "find . -type f -print0 | xargs -0 -r grep -lZ -- p | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 269,
+  "command": "dig +short google.com && cat google.com",
+  "score": 0
+ },
+ {
+  "id": 270,
+  "command": "grep -vi -- '  Hello world;876\t  ' characters",
+  "score": 0
+ },
+ {
+  "id": 271,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 272,
+  "command": "sed '987654321d' 987654321",
+  "score": 0
+ },
+ {
+  "id": 273,
+  "command": "cat /etc/os-release && pwd",
+  "score": 0
+ },
+ {
+  "id": 274,
+  "command": "find . -maxdepth 1 -type f -iname '*H*'",
+  "score": 0
+ },
+ {
+  "id": 275,
+  "command": "pgrep -a -i -- users && who",
+  "score": 1
+ },
+ {
+  "id": 276,
+  "command": "ping -c 4 192.168.1.1",
+  "score": 0
+ },
+ {
+  "id": 277,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 278,
+  "command": "who",
+  "score": 0
+ },
+ {
+  "id": 279,
+  "command": "cal && sleep 66856320000 && notify-send 'Time is up'",
+  "score": 0
+ },
+ {
+  "id": 280,
+  "command": "command -v sort && find /etc/group -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 20 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 281,
+  "command": "find . -type f -size -1M -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 282,
+  "command": "find . -type f | wc -l && find testbed -mindepth 1 -type d -printf '%T@\\t%p\\0' | sort -z -nr | head -z -n 20 | cut -z -f2- | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 283,
+  "command": "find testbed -type f -iname '*.py' | wc -l",
+  "score": 1
+ },
+ {
+  "id": 284,
+  "command": "sort -r textfile1.txt > textfile1_reverse_sorted.txt",
+  "score": 0
+ },
+ {
+  "id": 285,
+  "command": "find . -type f -print0 | xargs -0 -r grep -lZ -- Shell | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 286,
+  "command": "find testbed -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 20 | cut -z -f2- | xargs -0 -r du -sh --",
+  "score": 0
+ },
+ {
+  "id": 287,
+  "command": "find testbed/ -type f -print0 | du -ch --files0-from=- | tail -n 1",
+  "score": 0
+ },
+ {
+  "id": 288,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 289,
+  "command": "find /testbed/dir2 -type f -exec cat {} + | wc -l",
+  "score": 0
+ },
+ {
+  "id": 290,
+  "command": null,
+  "score": 0
+ },
+ {
+  "id": 291,
+  "command": "find /testbed -type f -mmin -120 -print0 | tar --null -czf archive.tar.gz -T -",
+  "score": 0
+ },
+ {
+  "id": 292,
+  "command": "find /testbed -mindepth 1 -type d ! -iname /testbed",
+  "score": 0
+ },
+ {
+  "id": 293,
+  "command": "find /testbed -type f -print0 | xargs -0 -r grep -lZ -- 'text file' | tr '\\0' '\\n'",
+  "score": 0
+ },
+ {
+  "id": 294,
+  "command": "md5sum MD5 && sudo find /testbed -type f -iname hashes.txt -exec chown same {} +",
+  "score": 0
+ },
+ {
+  "id": 295,
+  "command": "tail -n 10 /testbed/dir3/subdir1/subsubdir1/textfile3.txt",
+  "score": 1
+ },
+ {
+  "id": 296,
+  "command": "grep -i -- value3 /testbed/dir1/subdir1/jsonfile1.json",
+  "score": 0
+ },
+ {
+  "id": 297,
+  "command": "find /testbed -type f -mtime -1",
+  "score": 1
+ },
+ {
+  "id": 298,
+  "command": "find /testbed -maxdepth 1 -type f -print0 | xargs -0 -r grep -lZ -- Hello | xargs -0 -r sed -i 's/Hello/Hi/g' --",
+  "score": 0
+ },
+ {
+  "id": 299,
+  "command": "cat textfile3.txt && sort -nr textfile4.txt",
+  "score": 0
+ }
+]

@@ -163,15 +163,16 @@ _WORD = re.compile(r"[A-Za-z']+")
 
 
 def repetition_stats(text: str) -> tuple[float, float]:
-    """(fraction of characters in duplicated lines, fraction of chars in the most common line)."""
+    """(fraction of characters in repeated copies of lines, largest share of characters taken
+    by one line that occurs more than once)."""
     lines = [l.strip() for l in text.split("\n") if l.strip()]
     if len(lines) < 4:
         return 0.0, 0.0
     c = Counter(lines)
     total = sum(len(l) for l in lines) or 1
     dup = sum(len(l) * (n - 1) for l, n in c.items() if n > 1)
-    top_line, top_n = c.most_common(1)[0]
-    return dup / total, len(top_line) * top_n / total
+    top = max((len(l) * n for l, n in c.items() if n > 1), default=0)
+    return dup / total, top / total
 
 
 def prose_checks(text: str, *, min_words: int = 20, max_dup_line_frac: float = 0.3,
@@ -202,7 +203,7 @@ def prose_checks(text: str, *, min_words: int = 20, max_dup_line_frac: float = 0
     # one word or character repeated many times ("lol lol lol ...", "aaaaaaaa")
     if len(words) >= 10 and Counter(words).most_common(1)[0][1] / len(words) > 0.3 and len(set(words)) < 8:
         return "repetitive"
-    if re.search(r"(.)\1{40,}", text):
+    if re.search(r"(\w)\1{40,}", text):
         return "repetitive"
     return None
 

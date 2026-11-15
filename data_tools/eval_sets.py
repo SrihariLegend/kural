@@ -87,17 +87,28 @@ def main() -> None:
     (alfa / "README.md").write_text((alfa_raw / "README.md").read_text())
     PAIRS.mkdir(parents=True, exist_ok=True)
     train_rows = list(csv.DictReader(open(alfa_raw / "train.csv", newline="")))
-    test_nl = {" ".join(r["nl"].lower().split()) for r in test_rows}
-    n_overlap = 0
+
+    def norm(s: str) -> str:
+        return " ".join(s.lower().split())
+
+    test_nl = {norm(r["nl"]) for r in test_rows}
+    # NL2SH-ALFA's training set reuses NL2Bash. NL2Bash is one of kural's untuned test sets,
+    # so those rows are flagged (not dropped): filter on in_nl2bash before training.
+    nl2bash_all = {norm(l) for l in (nb / "all.nl").read_text(errors="replace").splitlines()}
+    nl2bash_test = {norm(r["nl"]) for r in json.loads((split / "test.json").read_text())}
+    n_overlap = n_nb = 0
     with open(PAIRS / "nl2sh_alfa_train.jsonl", "w") as fh:
         for i, r in enumerate(train_rows):
-            if " ".join(r["nl"].lower().split()) in test_nl:
+            k = norm(r["nl"])
+            if k in test_nl:
                 n_overlap += 1
                 continue
+            n_nb += k in nl2bash_all
             fh.write(json.dumps({"id": i, "nl": r["nl"], "bash": r["bash"], "verified": False,
+                                 "in_nl2bash": k in nl2bash_all, "in_nl2bash_test": k in nl2bash_test,
                                  "source": "westenfelder/NL2SH-ALFA train (MIT)"}) + "\n")
     log(f"NL2SH-ALFA: {len(test_rows)} test requests, {len(train_rows) - n_overlap} train pairs "
-        f"({n_overlap} dropped: same request as a test item)")
+        f"({n_overlap} dropped: same request as a test item; {n_nb} flagged in_nl2bash)")
 
     pats: dict[str, str] = {}
 

@@ -39,7 +39,7 @@ CONFIG = {
     },
 }
 ROWS_PER_TASK = 40_000
-SPUN = re.compile(r"[”“″][A-Za-z]|[A-Za-z][“]")
+SPUN = re.compile(r"[”″][A-Za-z]|[A-Za-z][“]")  # closing quote glued to the next word, or vice versa
 
 
 def produce(arg, drops):

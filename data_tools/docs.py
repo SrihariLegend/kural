@@ -61,9 +61,11 @@ def man_files() -> list[Path]:
 
 
 def render_man(path: Path) -> str | None:
-    env = {**os.environ, "MANWIDTH": "80", "MAN_KEEP_FORMATTING": "0", "LANG": "C.UTF-8", "LC_ALL": "C.UTF-8"}
+    # GROFF_NO_SGR: overstrike instead of ANSI escapes, which `col -bx` then removes
+    env = {**os.environ, "MANWIDTH": "80", "MAN_KEEP_FORMATTING": "0", "GROFF_NO_SGR": "1",
+           "LANG": "C.UTF-8", "LC_ALL": "C.UTF-8"}
     try:
-        r = subprocess.run(f"man -l -- {shlex_quote(str(path))} 2>/dev/null | col -bx", shell=True,
+        r = subprocess.run(f"man --no-hyphenation --no-justification -l -- {shlex_quote(str(path))} 2>/dev/null | col -bx", shell=True,
                            capture_output=True, env=env, timeout=60)
     except subprocess.TimeoutExpired:
         return None
@@ -164,7 +166,11 @@ def wiki_html_to_text(raw: str) -> tuple[str, str]:
 
     doc = lxml.html.fromstring(raw)
     title = (doc.findtext(".//title") or "").replace(" - ArchWiki", "").strip()
-    body = doc.get_element_by_id("bodyContent", None) or doc.get_element_by_id("content", None) or doc
+    body = doc.get_element_by_id("bodyContent", None)
+    if body is None:
+        body = doc.get_element_by_id("content", None)
+    if body is None:
+        body = doc
     for bad in body.xpath('.//*[@id="toc" or contains(@class,"mw-editsection") or contains(@class,"navbox") '
                           'or contains(@class,"catlinks") or contains(@class,"printfooter") or @id="siteSub" '
                           'or @id="jump-to-nav" or self::script or self::style]'):

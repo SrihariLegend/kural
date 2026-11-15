@@ -6,10 +6,10 @@ RS_YYYY-MM.zst submissions) mirrored at huggingface.co/datasets/Avni2110/pushshi
 fly, never stored, so disk use stays small.
 
 Phase 1 (extract, one task per month): keep submissions and comments from the
-subreddits in TECH_SUBS / GENERAL_SUBS. Dropped: [deleted]/[removed] bodies, deleted
-authors, bots (AutoModerator, names ending in "bot", "I am a bot" texts), NSFW
-submissions, comments under MIN_SCORE (2 for technical, 3 for general, 5 for AskReddit),
-comments under 20 characters. Rows are bucketed by thread id into data/work/reddit_extract/.
+subreddits in TECH_SUBS / GENERAL_SUBS. Dropped: [deleted]/[removed] bodies (posts of
+deleted accounts whose text survives are kept), bots (AutoModerator, names ending in
+"bot", "I am a bot" texts), NSFW submissions, comments under MIN_SCORE (2 for technical,
+3 for general, 5 for AskReddit), comments under 20 characters. Rows are bucketed by thread id into data/work/reddit_extract/.
 
 Phase 2 (threads, one task per bucket): each thread becomes one document:
 "r/<sub>: <title>", the self text, then the top comments by score (30 for technical
@@ -78,7 +78,7 @@ def is_bot(author: str | None) -> bool:
     if not author:
         return False
     a = author.lower()
-    return a in {"automoderator", "[deleted]"} or a.endswith("bot") or a.endswith("_bot") or "bot_" in a
+    return a == "automoderator" or a.endswith("bot") or a.endswith("_bot") or "bot_" in a
 
 
 def stream_lines(url: str):
@@ -156,7 +156,7 @@ def extract_month(month: str) -> dict:
                         key = row["id"]
                     else:
                         body = o.get("body")
-                        if body in DEAD or o.get("author") in DEAD:
+                        if body in DEAD:
                             c["deleted"] += 1
                             continue
                         if (o.get("score") or 0) < min_score(sub):

@@ -17,7 +17,7 @@ import sys
 
 from . import ir
 
-PATH = os.path.join(os.path.dirname(__file__), "lexicon.json")
+PATH = os.environ.get("KURAL_LEXICON") or os.path.join(os.path.dirname(__file__), "lexicon.json")
 _LEX = None
 _WORD = re.compile(r"[a-z][a-z0-9+\-]*")
 
@@ -70,6 +70,12 @@ def support(program, words, used):
     return sum(_known(w, vocab) for w in cand), len(cand)
 
 
+def _extra():
+    """Extra examples (JSON lines {words, out, n}) named by KURAL_LEXICON_EXTRA, e.g. filtered paraphrases."""
+    path = os.environ.get("KURAL_LEXICON_EXTRA")
+    return [(r["words"], r["out"], r["n"]) for r in map(json.loads, open(path))] if path else []
+
+
 def build(n=400_000, seed=77):
     import random
     from collections import Counter
@@ -77,8 +83,9 @@ def build(n=400_000, seed=77):
     r = random.Random(seed)
     seen, total = {}, Counter()
     made = 0
-    while made < n:
-        words, out, n_req = mix.example(r)
+    extra = _extra()
+    while made < n + len(extra):
+        words, out, n_req = extra[made - n] if made >= n else mix.example(r)
         toks = [t for t in out if t != ir.END]
         if ir.SEP in toks:
             continue                                     # several steps: words cannot be attributed to one of them
