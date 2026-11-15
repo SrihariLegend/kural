@@ -18,6 +18,7 @@ import time
 import pyte
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RUST = os.path.join(ROOT, "target", "release", "kural")          # the hook calls this; KURAL_TEST_PYTHON=1 uses the Python CLI
 
 
 class Term:
@@ -30,7 +31,10 @@ class Term:
         os.mkdir(os.path.join(self.tmp, "bin"))
         launcher = os.path.join(self.tmp, "bin", "kural")
         with open(launcher, "w") as f:
-            f.write(f"#!/bin/sh\nexec env PYTHONPATH={ROOT} python3 -m kural.cli \"$@\"\n")
+            if os.environ.get("KURAL_TEST_PYTHON") == "1" or not os.access(RUST, os.X_OK):
+                f.write(f"#!/bin/sh\nexec env PYTHONPATH={ROOT} python3 -m kural.cli \"$@\"\n")
+            else:
+                f.write(f"#!/bin/sh\nexec {RUST} \"$@\"\n")
         os.chmod(launcher, 0o755)
         env = dict(os.environ, XDG_RUNTIME_DIR=self.tmp, PATH=self.tmp + "/bin:" + os.environ["PATH"], TERM="xterm-256color",
                    LANG="en_US.UTF-8", KURAL_BIN=launcher)

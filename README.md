@@ -101,7 +101,7 @@ for each, including follow-ups. No larger model is involved at run time.
 
 ## The engine (Rust)
 
-`engine/` is the run-time model in Rust, with no dependencies: `cargo build --release --manifest-path engine/Cargo.toml`.
+`engine/` is the run-time model in Rust, with no dependencies: `cargo build --release`.
 When it is built, the Python front end uses it automatically through its C interface (`engine/include/kural.h`);
 otherwise the NumPy code in `kural/run.py` runs, which stays as the reference.
 
@@ -163,7 +163,7 @@ python -m kural.lexicon                               # rebuild the word table a
 python tests/evaluate.py tests/v2_dev.txt -v            # score, listing the misses
 python tests/run_commands.py                            # execute generated commands in a scratch folder
 python tests/term.py                                    # drive the bash hook in a pseudo-terminal (needs pyte)
-python -m kural.export && cargo build --release --manifest-path engine/Cargo.toml
+python -m kural.export && cargo build --release
 python tests/compare_engines.py                         # Rust engine against the NumPy reference
 ```
 

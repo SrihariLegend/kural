@@ -9,6 +9,8 @@
 # Each terminal keeps one throwaway session file (commands run, requests, corrections), so a request can
 # build on the one before it: ": find pdfs over 10mb", then ": delete them".
 #
+# Every answer is one short run of the `kural` binary (KURAL_BIN, default "kural"); nothing stays running.
+#
 # Settings (set before sourcing):  KURAL_COLOR  colour of the request line, as SGR numbers (default 38;5;141)
 #                                  KURAL_PREVIEW=0  no live preview while typing
 
@@ -19,11 +21,15 @@ command -v "$__kural_bin" >/dev/null 2>&1 || return 0
 
 if [[ -n ${XDG_RUNTIME_DIR-} && -d $XDG_RUNTIME_DIR ]]; then __kural_dir=$XDG_RUNTIME_DIR/kural; else __kural_dir=/tmp/kural-$UID; fi
 [[ -d $__kural_dir ]] || mkdir -p -m 700 "$__kural_dir" 2>/dev/null || return 0
+for __kural_f in "$__kural_dir"/s.* "$__kural_dir"/r.*; do               # files left by terminals that are gone
+  [[ -e $__kural_f && ${__kural_f##*.} =~ ^[0-9]+$ ]] || continue
+  kill -0 "${__kural_f##*.}" 2>/dev/null || rm -f -- "$__kural_f"
+done
+unset __kural_f
 __kural_session=$__kural_dir/s.$$
 printf 'kural-session\t1\t%s\n' "$$" > "$__kural_session" 2>/dev/null || return 0
-__kural_seq=0 __kural_fails=0 __kural_fresh=1 __kural_histnum= __kural_offer= __kural_request= __kural_after=
+__kural_fails=0 __kural_fresh=1 __kural_histnum= __kural_offer= __kural_request= __kural_after=
 __kural_hist=() __kural_cmds=() __kural_risks=() __kural_confs=() __kural_reads=()
-__kural_qfd= __kural_rfd=
 __kural_utf=0; [[ ${LC_ALL:-${LC_CTYPE:-${LANG-}}} == *[Uu][Tt][Ff]* ]] && __kural_utf=1
 
 # ---- the session file: every command that runs, and what was run instead of an offer
@@ -63,62 +69,31 @@ __kural_precmd() {
   return $st
 }
 
-# ---- talking to the answering process (started on demand, shared by all terminals, exits when idle)
-__kural_serve() {
-  local pid
-  if [[ -p $__kural_dir/req && -r $__kural_dir/serve.pid ]]; then
-    read -r pid < "$__kural_dir/serve.pid"
-    [[ -n $pid ]] && kill -0 "$pid" 2>/dev/null && return 0
-  fi
-  ( "$__kural_bin" --serve & ) >/dev/null 2>&1
-}
-
-__kural_open() {
-  local r=$__kural_dir/r.$$ i
-  if [[ -z $__kural_rfd ]]; then
-    [[ -p $r ]] || mkfifo -m 600 "$r" 2>/dev/null || return 1
-    exec {__kural_rfd}<>"$r" || { __kural_rfd=; return 1; }
-  fi
-  if [[ -z $__kural_qfd ]]; then
-    for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do      # the pipe appears when the process is up
-      [[ -p $__kural_dir/req ]] && break
-      read -r -t 0.05 -u "$__kural_rfd" _ 2>/dev/null
-    done
-    [[ -p $__kural_dir/req ]] || return 1
-    exec {__kural_qfd}<>"$__kural_dir/req" || { __kural_qfd=; return 1; }
-  fi
-}
-
-# __kural_ask MODE TEXT [TIMEOUT]  ->  fills __kural_cmds/risks/confs/reads; 0 = answered (possibly with nothing)
+# ---- asking the kural binary: one short call per request, nothing is left running
+# __kural_ask MODE TEXT [CHOOSE]  ->  fills __kural_cmds/risks/confs/reads; 0 = answered (possibly with nothing)
+#   MODE is "preview" (while typing: nothing is recorded) or "final" (Enter: the offer is recorded in the session file)
 __kural_ask() {
-  local seq=$(( ++__kural_seq )) line parts i n tries=0
+  local line i n
+  local -a parts flags=(--hook --session "$__kural_session" --cwd "$PWD")
+  [[ $1 == preview ]] && flags+=(--preview)
+  (( ${3:-0} > 0 )) && flags+=(--choose "$3")
   __kural_cmds=() __kural_risks=() __kural_confs=() __kural_reads=()
-  __kural_serve
-  __kural_open || return 1
-  printf '%s\x1f%s\x1f%s\x1f%s\x1f%s\x1f%s\n' "$seq" "$__kural_dir/r.$$" "$1" "$__kural_session" "$PWD" "$2" >&"$__kural_qfd" || return 1
-  while IFS= read -r -t "${3:-0.5}" -u "$__kural_rfd" line; do
-    if [[ ${line%%$'\x1f'*} == "$seq" ]]; then
-      IFS=$'\x1f' read -r -a parts <<< "$line"
-      n=${parts[1]:-0}
-      for (( i = 0; i < n; i++ )); do
-        __kural_cmds[i]=${parts[2 + 4 * i]//$'\x1e'/$'\n'}
-        __kural_risks[i]=${parts[3 + 4 * i]}
-        __kural_confs[i]=${parts[4 + 4 * i]}
-        __kural_reads[i]=${parts[5 + 4 * i]}
-      done
-      return 0
-    fi
-    (( ++tries > 50 )) && break
+  line=$("$__kural_bin" "${flags[@]}" -- "$2" 2>/dev/null) || return 1
+  IFS=$'\x1f' read -r -a parts <<< "$line"
+  n=${parts[0]:-x}
+  [[ $n =~ ^[0-9]+$ ]] || return 1
+  for (( i = 0; i < n; i++ )); do
+    __kural_cmds[i]=${parts[1 + 4 * i]//$'\x1e'/$'\n'}
+    __kural_risks[i]=${parts[2 + 4 * i]}
+    __kural_confs[i]=${parts[3 + 4 * i]}
+    __kural_reads[i]=${parts[4 + 4 * i]}
   done
-  return 1
+  return 0
 }
 
-# a final answer, falling back to a one-off run of the program if the answering process is not reachable
 __kural_final() {
-  if __kural_ask "final:${2:-0}" "$1" 3; then __kural_fails=0; return 0; fi
-  local out
-  out=$("$__kural_bin" --shell --session "$__kural_session" "$1" 2>/dev/null) || return 0
-  { IFS= read -r '__kural_cmds[0]'; IFS= read -r '__kural_risks[0]'; IFS= read -r '__kural_confs[0]'; IFS= read -r '__kural_reads[0]'; } <<< "$out"
+  __kural_ask final "$1" "${2:-0}" && __kural_fails=0
+  return 0
 }
 
 # ---- drawing. These use the editor's local variables (bash looks names up in the caller).
@@ -192,7 +167,6 @@ __kural_editor() {
   stty -isig -ixon 2>/dev/null
   __kural_cmds=()
   (( __kural_fails >= 3 )) && live=0
-  [[ $live == 1 ]] && __kural_serve
   __kural_draw
   __kural_after=keep
   while :; do
@@ -202,7 +176,7 @@ __kural_editor() {
         dirty=0
         if [[ $buf =~ ^:[[:space:]]+([^[:space:]].*)$ ]]; then
           text=${BASH_REMATCH[1]}
-          if __kural_ask preview "$text" 0.6; then
+          if __kural_ask preview "$text"; then
             __kural_fails=0
             if [[ $text == *' '*' '* ]]; then __kural_preview "nothing I can do with that yet"; else __kural_preview; fi
           else

@@ -1,6 +1,6 @@
 """Run the commands kural generates, for real, in a scratch folder, and check what they did.
 
-  python tests/run_commands.py
+  python tests/run_commands.py [--rust]      --rust: build the commands with the Rust binary instead of Python
 
 This tests the compiler (program -> bash), not the parser: every program here is written by hand.
 File names include spaces, quotes, a leading dash and upper case, because that is where shell commands break.
@@ -116,13 +116,28 @@ CHECKS = [
 ]
 
 
+RUST = "--rust" in sys.argv
+BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "target", "release", "kural")
+
+
+def build(program, d):
+    if RUST:
+        import json
+        p = subprocess.run([BIN, "--compile-json", json.dumps(program), "--live", "--cwd", d, "--last", "cat nums.txt"],
+                           capture_output=True, text=True)
+        if p.returncode:
+            raise RuntimeError(p.stderr.strip())
+        return p.stdout.rstrip("\n")
+    return C.compile_program(program, C.Env(cwd=d, live=True, last="cat nums.txt"))
+
+
 def main():
     fails = 0
+    print("compiler:", "Rust (target/release/kural)" if RUST else "Python")
     for name, program, check in CHECKS:
         d = fresh()
-        env = C.Env(cwd=d, live=True, last="cat nums.txt")
         try:
-            cmd = C.compile_program(program, env)
+            cmd = build(program, d)
             p = subprocess.run(["bash", "-c", cmd], cwd=d, capture_output=True, text=True, timeout=20)
             ok = bool(check(p.stdout, d))
         except Exception as e:

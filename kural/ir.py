@@ -2,13 +2,14 @@
 
 A program is one to three pipelines. A pipeline is a source stage, any number of
 filter/transform stages, and one final action stage; or a single stand-alone command
-(those live in commands.py). Every stage has a fixed list of slots. A slot is filled either
+(those live in lang/commands.txt). The stages themselves are listed in lang/stages.txt. Every stage has a fixed list of slots. A slot is filled either
 by a span of words (copied from the request or from the session context, never generated)
 or by one value from a small fixed set.
 
 The model only ever emits tokens from this language, and `Grammar` restricts each
 step to what is valid at that point, so every decoded program is well-formed.
 """
+import os
 from dataclasses import dataclass
 
 from . import commands
@@ -16,21 +17,6 @@ from . import commands
 # data types that flow between stages
 F, L, P, X = "files", "lines", "procs", "done"
 NEG, SUDO = "neg", "sudo"        # grammar states: after "not", after "sudo"
-
-ENUMS = {
-    "mode": ["is", "has", "starts", "ends"],
-    "fkey": ["size", "time", "name"],
-    "lkey": ["alpha", "num"],
-    "pkey": ["mem", "cpu"],
-    "order": ["asc", "desc"],
-    "fmt": ["tgz", "zip"],
-    "force": ["soft", "hard"],
-    "what": ["anyfile", "dirs"],
-    "sep": ["space", "comma", "tab", "colon", "semi", "bar"],
-    "prefkey": ["trash", "confirm", "verbose"],
-    "onoff": ["on", "off"],
-}
-
 
 @dataclass(frozen=True)
 class Slot:
@@ -56,104 +42,40 @@ def span(name, value, optional=False):
     return Slot(name, "span", value, optional)
 
 
-STAGES = [
-    # ---- "run it as root": may come first in any pipeline
-    S("sudo", None, SUDO),
-    # ---- sources
-    S("files", None, F, Slot("what", "what"), span("in", "path", True)),
-    S("paths", None, F, span("names", "files")),                 # files the user named outright
-    S("lines", None, L, span("of", "file")),
-    S("procs", None, P),
-    S("port", None, P, span("n", "port")),                       # whatever is listening on a port
-    S("history", None, L), S("env", None, L), S("pkgs", None, L), S("services", None, L),
-    S("journal", None, L, span("unit", "unit", True)),
-    S("dmesg", None, L), S("clipboard", None, L),
-    S("last", None, L),                                          # the output of the previous command, run again
-    # ---- file filters
-    S("not", F, NEG),                                            # negates the filter that follows
-    S("flat", F, F),
-    S("depth", F, F, span("n", "count")),
-    S("ext", F, F, span("ext", "ext")),
-    S("name", F, F, Slot("mode", "mode"), span("text", "glob")),
-    S("larger", F, F, span("size", "size", True)),
-    S("smaller", F, F, span("size", "size", True)),
-    S("newer", F, F, span("age", "dur", True)),
-    S("older", F, F, span("age", "dur", True)),
-    S("since", F, F, span("date", "date")),
-    S("before", F, F, span("date", "date")),
-    S("contains", F, F, span("text", "text")),
-    S("empty", F, F),
-    S("hidden", F, F),
-    S("owner", F, F, span("user", "owner")),
-    S("isexec", F, F),
-    # ---- line filters and edits
-    S("match", L, L, span("text", "text")),
-    S("nomatch", L, L, span("text", "text")),
-    S("uniq", L, L),
-    S("lrange", L, L, span("a", "count"), span("b", "count")),
-    S("lline", L, L, span("n", "count")),
-    S("ldel", L, L, span("n", "count")),                         # drop one line by its number
-    S("col", L, L, span("n", "count"), Slot("sep", "sep")),
-    S("lreplace", L, L, span("old", "text"), span("new", "text")),
-    S("lfreq", L, L), S("lnum", L, L), S("lrev", L, L), S("lshuf", L, L),
-    S("lupper", L, L), S("llower", L, L), S("lsum", L, L), S("lblank", L, L),
-    # ---- process filters
-    S("pname", P, P, span("name", "word")),
-    S("puser", P, P, span("user", "owner")),
-    # ---- transforms (same type in and out); one entry per input type keeps the grammar simple
-    S("fsort", F, F, Slot("key", "fkey"), Slot("order", "order")),
-    S("lsort", L, L, Slot("key", "lkey"), Slot("order", "order")),
-    S("psort", P, P, Slot("key", "pkey"), Slot("order", "order")),
-    S("ftake", F, F, span("n", "count", True)),
-    S("fpick", F, F, span("n", "count")),                        # "the second one"
-    S("ltake", L, L, span("n", "count", True)),
-    S("ptake", P, P, span("n", "count", True)),
-    S("llast", L, L, span("n", "count", True)),
-    # ---- files become lines
-    S("fnames", F, L),                                           # their paths, one per line
-    S("fcat", F, L),                                             # their contents
-    # ---- actions that end a pipeline
-    S("fshow", F, X), S("lshow", L, X), S("pshow", P, X),
-    S("fcount", F, X), S("lcount", L, X), S("pcount", P, X),
-    S("total", F, X),
-    S("sizes", F, X),
-    S("details", F, X),
-    S("delete", F, X),
-    S("trash", F, X),
-    S("move", F, X, span("to", "path")),
-    S("copy", F, X, span("to", "path")),
-    S("compress", F, X, Slot("fmt", "fmt"), span("to", "file", True)),
-    S("fgrep", F, X, span("text", "text")),
-    S("fopen", F, X), S("fedit", F, X),
-    S("chmod", F, X, span("mode", "mode")),
-    S("chown", F, X, span("owner", "owner")),
-    S("rn_lower", F, X), S("rn_upper", F, X), S("rn_spaces", F, X),
-    S("rn_replace", F, X, span("old", "text"), span("new", "text")),
-    S("rn_prefix", F, X, span("text", "text")),
-    S("rn_suffix", F, X, span("text", "text")),
-    S("rn_ext", F, X, span("ext", "ext")),
-    S("replace", F, X, span("old", "text"), span("new", "text")),
-    S("fhash", F, X), S("by_ext", F, X), S("dupes", F, X),
-    S("upload", F, X, span("to", "remote")),
-    S("kill", P, X, Slot("force", "force")),
-    S("wcount", L, X), S("ccount", L, X),
-    S("save", L, X, span("to", "file")),
-    S("lappend", L, X, span("to", "file")),
-    S("inplace", L, X),                                          # write the result back into the file it came from
-    S("clip", L, X),
-    # ---- session preferences
-    S("pref", None, X, Slot("key", "prefkey"), Slot("state", "onoff")),
-]
-# ---- stand-alone commands, from the table in commands.py
-STAGES += [S(c["name"], None, X, *[span(n, t, opt) for n, t, opt in c["slots"]]) for c in commands.COMMANDS]
-# ---- "this is not something I can do": lets the parser decline instead of guessing
-STAGES.append(S("unknown", None, X))
+def _load_stages():
+    """kural/lang/stages.txt (shared with the Rust code), with the commands of commands.txt where it says *commands."""
+    enums, lists, stages = {}, {}, []
+    types = {"-": None, "files": F, "lines": L, "procs": P, "done": X, "neg": NEG, "sudo": SUDO}
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "lang", "stages.txt")
+    for line in open(path, encoding="utf-8"):
+        f = line.split()
+        if not f or f[0].startswith("#"):
+            continue
+        if f[0] == "%":
+            enums[f[1]] = f[2:]
+        elif f[0] == "&":
+            lists[f[1]] = f[2:]
+        elif f[0] == "*commands":
+            stages += [S(c["name"], None, X, *[span(n, t, opt) for n, t, opt in c["slots"]]) for c in commands.COMMANDS]
+        elif f[0] == "@":
+            slots = []
+            for spec in f[4:]:
+                if "=" in spec:
+                    name, kind = spec.split("=")
+                    slots.append(Slot(name, kind))
+                else:
+                    name, kind = spec.split(":")
+                    slots.append(span(name, kind.rstrip("?"), kind.endswith("?")))
+            stages.append(S(f[1], types[f[2]], types[f[3]], *slots))
+    return enums, lists, stages
+
+
+ENUMS, _LISTS, STAGES = _load_stages()
 BY_NAME = {s.name: s for s in STAGES}
 assert len(BY_NAME) == len(STAGES), "duplicate stage name"
 
-NEGATABLE = ["ext", "name", "newer", "older", "contains", "empty", "hidden", "owner", "isexec"]
-FILTER_ORDER = ["flat", "depth", "ext", "name", "larger", "smaller", "newer", "older", "since", "before", "contains",
-                "empty", "hidden", "owner", "isexec"]
+NEGATABLE = _LISTS["negatable"]
+FILTER_ORDER = _LISTS["filter_order"]
 
 SPECIAL = ["<pad>", "<bos>", "<end>", ";", "<none>"]
 VOCAB = SPECIAL + [s.name for s in STAGES] + sorted({v for vs in ENUMS.values() for v in vs} - {s.name for s in STAGES})

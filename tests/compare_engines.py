@@ -10,7 +10,7 @@ sys.path.insert(0, "tests")
 import evaluate
 from kural import native, run
 
-assert native.available(), "build the engine first: cargo build --release --manifest-path engine/Cargo.toml"
+assert native.available(), "build the engine first: cargo build --release"
 P = run.weights()
 rows = []
 for f in ("v2_dev", "v2_final", "once_outside", "natural_dev", "natural_test", "natural_final"):

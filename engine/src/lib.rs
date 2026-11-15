@@ -3,12 +3,20 @@
 //! Rust API: `Engine::load`, `Engine::words`, `Engine::parse`, `Engine::program_json`.
 //! C API (see include/kural.h): `kural_open`, `kural_parse`, `kural_close`.
 
+pub mod answer;
+pub mod compile;
 pub mod ffi;
+pub mod ground;
 pub mod json;
+pub mod lang;
 pub mod kernels;
 pub mod model;
+pub mod program;
+pub mod py;
 pub mod search;
+pub mod session;
 pub mod tok;
+pub mod values;
 
 pub use search::{Engine, Parse};
 

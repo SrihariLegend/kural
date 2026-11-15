@@ -1,0 +1,1486 @@
+# ------------------------------------------------------------------ machine facts
+@ disk_free
+$ df -h
+how much disk space is left
+free disk space
+how full (are my disks|is my drive|is the disk|is my ssd)
+disk space left
+how much (storage|free space|disk space|space) do i have [left]
+df [-h]
+show free space on my drives
+how much space is left on (the disk|my drive|this machine)
+is my disk full
+(check|show) disk (space|usage)
+remaining disk space
+am i running out of (disk space|space|storage)
+
+@ mem_free
+$ free -h
+how much (ram|memory) is (free|available|left|being used|in use)
+(memory|ram) usage
+how much (memory|ram) am i using
+show (free|available) (memory|ram)
+how much ram do i have [left]
+check (memory|ram)
+free (ram|memory)
+is my (memory|ram) full
+show (memory|ram) usage
+(available|free) (memory|ram)
+free -h
+
+@ cpu_info
+$ lscpu
+(what|which) (cpu|processor|chip) (do i have|is this|is in this (machine|laptop|computer))
+[show|print] (cpu|processor) (info|information|details|model|specs)
+how many (cores|cpus|threads|cpu cores) (do i have|does this (machine|thing|laptop) have|are there)
+lscpu
+(which|what) processor am i running [on]
+
+@ kernel
+$ uname -r
+(what|which) kernel (am i (running|on|using)|is this|version (is this|am i on|do i have))
+[show|print|check] [the|my] kernel version
+uname [-r|-a]
+what version of (the kernel|linux|the linux kernel) (am i|is this) [on|running]
+
+@ os_info
+$ cat /etc/os-release
+(what|which) (distro|distribution|os|operating system|linux distro) (am i (on|running|using)|is this)
+[show|print] (os|distro|system|release) (info|version|details)
+what version of (arch|ubuntu|fedora|debian|mint|the os|my os) (is this|am i (running|on))
+which linux is this
+
+@ uptime
+$ uptime
+how long has (this|the|my) (machine|computer|system|laptop|pc|box) been (up|on|running)
+[show|check|what is|whats|what's] [the|my|system] uptime
+when (did|was) (i|this|it|the machine|the system) last (reboot|rebooted|restart|restarted|boot|booted)
+how long since [the] last (reboot|boot|restart)
+
+@ hostname
+$ hostname
+(what is|what's|whats|show|print) (my|this|the) (hostname|host name|computer name|machine name)
+hostname
+what is this (machine|computer|box) called
+name of this (machine|computer|host)
+
+@ whoami
+$ whoami
+who am i [logged in as|running as]
+(what|which) user am i [logged in as|running as]
+whoami
+(show|print|what is|what's) my (username|user name|login|login name)
+
+@ users_on
+$ who
+who [else] is (logged in|logged on|on this machine|online|connected) [right now]
+(show|list) (logged in users|who is logged in|active sessions|login sessions)
+is anyone else (logged in|on this machine)
+
+@ date_now
+$ date
+what time is it [now|right now]
+(what is|what's|whats|show|print|tell me) (the|today's|todays) (time|date|date and time|current time|current date)
+what day is it [today]
+what is the date today
+current (time|date)
+
+@ calendar
+$ cal
+(show|print|display) [me] (the|a|this month's) calendar
+cal
+calendar [for this month]
+
+@ battery
+$$
+(what is|what's|whats|show|check) (my|the) battery [level|status|percentage|charge|at]
+how much (battery|charge|juice|power) (do i have [left]|is left|have i got)
+battery (level|status|percentage|left|life|charge)
+is (the|my) (battery|laptop) (charging|plugged in|full)
+how is my battery [doing]
+
+@ temps
+$ sensors
+(what is|what's|show|check) (the|my) (cpu|system|gpu|core) (temperature|temp|temps|temperatures)
+how hot is (my|the) (cpu|computer|laptop|machine|system|processor)
+(show|check|read) [the] (temperatures|temps|sensors|thermal sensors)
+is my (laptop|cpu|computer) (overheating|running hot|too hot)
+sensors
+
+@ gpu_info
+$ lspci -k | grep -EA3 'VGA|3D|Display'
+(what|which) (gpu|graphics card|video card|graphics) (do i have|is this|is in this (machine|laptop))
+[show|print] (gpu|graphics card|video card) (info|details|model)
+
+@ usb_list
+$ lsusb
+(list|show) [all|the|connected|my] usb devices
+what usb devices are (connected|plugged in|attached)
+(what's|what is|whats) plugged in(to| to) (usb|my usb ports|the usb ports)
+lsusb
+
+@ disks
+$ lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS
+(list|show) [all|the|my] (disks|drives|partitions|block devices|storage devices)
+(what|which) (disks|drives|partitions) (do i have|are there|are (attached|connected|mounted))
+lsblk
+show mounted (drives|filesystems|partitions|disks)
+where is (the|my) (usb|usb drive|usb stick|external drive|sd card) mounted
+(what's|what is) mounted [where]
+
+# ------------------------------------------------------------------ network
+@ my_ip
+$ ip -brief -4 addr
+(what's|what is|whats) my [local|private|lan] ip [address]
+show my [local] ip address
+local ip address
+what ip do i have
+my ip
+ip address of this (machine|computer|laptop)
+show network addresses
+(what's|what is) this computer's ip
+
+@ public_ip
+$ curl -s https://ifconfig.me
+(what is|what's|whats) my (public|external|wan|internet) ip [address]
+(show|get|find|check) my (public|external) ip [address]
+what ip (does the internet see|do websites see) [for me]
+public ip
+
+@ ports
+$ ss -tulpn
+(what|which) ports are (open|listening|in use)
+show listening ports
+(what's|what is) listening on the network
+(list|show) open ports
+what services are listening
+open ports
+ss -tulpn
+
+@ wifi_list
+$ nmcli device wifi list
+(list|show|scan for|find|scan) [available|nearby|all|the] (wifi|wi-fi|wireless) networks
+what (wifi|wireless|wi-fi) networks are (available|around|nearby|in range)
+scan [for] wifi
+which wifi networks can i (see|connect to|join)
+
+@ wifi_which
+$ nmcli -t -f active,ssid dev wifi | grep '^yes'
+(which|what) (wifi|network|wi-fi|ssid) am i (connected to|on|using)
+(show|what is|what's) [the|my] current (wifi|network|ssid|wifi network)
+name of (the|my) (wifi|wifi network|network) [i'm on|im on]
+
+@ wifi_connect ssid:ssid !1
+$ nmcli device wifi connect {ssid} --ask
+connect to [the] (wifi|wi-fi|wireless) [network] [called|named] {ssid}
+connect to [the] {ssid} (wifi|network|wi-fi)
+join [the] (wifi|network|wi-fi) [network] [called|named] {ssid}
+(get|hop) on [the] {ssid} (wifi|network)
+connect to [the] network {ssid}
+
+@ wifi_on !1
+$ nmcli radio wifi on
+(turn|switch) (on wifi|wifi on|on wi-fi|on the wifi|the wifi on|wi-fi on|the wifi back on)
+enable (wifi|wi-fi|wireless|the wifi)
+wifi on
+
+@ wifi_off !1
+$ nmcli radio wifi off
+(turn|switch) (off wifi|wifi off|off wi-fi|off the wifi|the wifi off|wi-fi off)
+disable (wifi|wi-fi|wireless|the wifi)
+wifi off
+(kill|cut) the wifi
+
+@ bt_on !1
+$ bluetoothctl power on
+(turn|switch) (on bluetooth|bluetooth on|on the bluetooth|the bluetooth on)
+enable bluetooth
+bluetooth on
+
+@ bt_off !1
+$ bluetoothctl power off
+(turn|switch) (off bluetooth|bluetooth off|off the bluetooth|the bluetooth off)
+disable bluetooth
+bluetooth off
+
+@ ping host:host
+$ ping -c 4 {host}
+ping {host}
+is {host} (up|reachable|online|alive|down|responding|working)
+(check|see|test) (if|whether) {host} is (up|reachable|online|alive|responding|down)
+can i reach {host}
+(check|test) [my|the] (connection|connectivity) to {host}
+does {host} respond [to ping|to pings]
+
+@ online
+$ ping -c 3 1.1.1.1
+am i (online|connected to the internet|connected)
+(is|do i have) (the|my|an|) internet [connection] [working|up|down]
+(check|test) [my|the] internet [connection]
+is (the|my) (internet|network|connection) (working|up|down)
+do i have (internet|a connection|network)
+
+@ dns host:host
+$$
+(what is|what's|find|get|look up|lookup|resolve) the ip [address] (of|for) {host}
+(dns lookup|nslookup|dig|resolve|dns) [for|of] {host}
+what does {host} resolve to
+(which|what) ip does {host} (point to|have|resolve to)
+ip (address|) (of|for) {host}
+
+@ download url:url to:path? !1
+$$
+(download|fetch|grab|get|pull down|wget) {url} [(to|into|in) {to}]
+(download|save) [the file] [at|from] {url} [(to|into|in) {to}]
+(download|grab|fetch) (this|the file|this file|this link|this url) {url}
+curl -O {url}
+save {url} (to|into|in) {to}
+
+@ http_get url:url
+$ curl -s {url}
+(curl|show|print|fetch) [the] (contents|content|body|response|page|html) (of|from|at) {url}
+(make|send|do) a get request to {url}
+what does {url} return
+curl {url}
+(hit|call|request) {url} [and show the response]
+
+@ http_head url:url
+$ curl -sI {url}
+(show|get|fetch|check) [the] [http|response] headers (of|for|from) {url}
+(what|which) (status|status code|headers) does {url} (return|give|send)
+curl -I {url}
+http (status|headers) (of|for) {url}
+
+@ ssh host:host
+$ ssh {host}
+ssh [in|into|to|in to] {host}
+(log in|login|log|connect|remote) (to|into|in to) {host} [(via|over|with|using) ssh]
+open (a|an) (ssh|remote|shell) (session|connection) (to|on|with) {host}
+(get|give me) a shell on {host}
+ssh into my (server|box|machine|pi) (at|called|named) {host}
+
+@ port_check host:host port:port
+$ nc -zv {host} {port}
+(is|check if|check whether|see if|test if) port {port} [is] open on {host}
+(can i reach|test|check) {host} (on|at) port {port}
+is {host} listening on [port] {port}
+(check|test|probe) port {port} on {host}
+
+@ serve port:port?
+$$
+(serve|share|host) (this|the current) (folder|directory|dir) (over http|on the network|on the web|as a website)
+(serve|share|host) (this|the current) (folder|directory|dir) on port {port}
+(start|run|spin up|launch) (a|an) [simple|quick|basic|local|tiny] (http|web|file) server [here|in this folder]
+(start|run|spin up|launch) (a|an) [simple|quick|local] (http|web) server on port {port}
+python [-m] http.server [{port}]
+
+# ------------------------------------------------------------------ services and logs
+@ svc_status unit:unit
+$ systemctl status {unit}
+(status of|check on|show status of) [the] {unit} [service|daemon|unit]
+is [the] {unit} (service|daemon|unit) (running|up|active|enabled|alive|started|dead|down|ok)
+systemctl status {unit}
+(what is|what's|whats) [the] {unit} (service|daemon) (doing|up to)
+(show|get|what's|what is|check) [the] status (of|for) [the] {unit} [service|daemon]
+is [the] {unit} (service|daemon) enabled
+how is [the] {unit} (service|daemon) doing
+
+@ svc_start unit:unit !1
+$ sudo systemctl start {unit}
+start [up] [the] {unit} [service|daemon|unit]
+(bring up|fire up|activate|spin up) [the] {unit} (service|daemon)
+systemctl start {unit}
+(turn|switch) on [the] {unit} (service|daemon)
+get [the] {unit} (service|daemon) (running|going|started)
+
+@ svc_stop unit:unit !2
+$ sudo systemctl stop {unit}
+stop [the] {unit} (service|daemon|unit)
+(shut down|bring down|halt|deactivate|turn off|kill) [the] {unit} (service|daemon)
+systemctl stop {unit}
+
+@ svc_restart unit:unit !1
+$ sudo systemctl restart {unit}
+restart [the] {unit} [service|daemon|unit]
+(bounce|reload|kick|cycle|reboot) [the] {unit} (service|daemon)
+systemctl restart {unit}
+(stop and start|turn off and on) [the] {unit} [service|daemon] [again]
+give [the] {unit} [service|daemon] a restart
+
+@ svc_enable unit:unit !1
+$ sudo systemctl enable --now {unit}
+enable [the] {unit} [service|daemon|unit] [(at|on) (boot|startup)]
+(make|have|set) [the] {unit} [service|daemon] [to] (start|run|launch|come up) (at|on) (boot|startup|login) [automatically]
+(start|run|launch) [the] {unit} [service|daemon] (at|on|every) (boot|startup) [automatically]
+systemctl enable {unit}
+autostart [the] {unit} [service|daemon]
+
+@ svc_disable unit:unit !1
+$ sudo systemctl disable --now {unit}
+disable [the] {unit} [service|daemon|unit] [(at|on) (boot|startup)]
+(stop|prevent|keep) [the] {unit} [service|daemon] from (starting|running|launching) (at|on) (boot|startup)
+(don't|do not|dont) (start|run|launch) [the] {unit} [service|daemon] (at|on) (boot|startup)
+systemctl disable {unit}
+
+@ svc_follow unit:unit
+$ journalctl -fu {unit}
+(follow|tail|watch|stream|monitor) [the] (logs|log|journal) (of|for|from) [the] {unit} [service|daemon]
+(follow|tail|watch|stream|monitor) [the] {unit} (logs|log|service logs) [live|in real time]
+journalctl -fu {unit}
+show [the] {unit} logs (live|in real time|as they come)
+
+@ svc_failed
+$ systemctl --failed
+(which|what|any|show|list) [systemd] (services|units) [have|that|that have] failed
+(show|list|any) failed (services|units)
+did any (service|unit) fail
+systemctl --failed
+is anything (broken|failing|failed) in systemd
+
+@ sys_errors
+$ journalctl -p err -b --no-pager
+(show|any|list|check for) [system|recent] errors (in the (system log|journal|logs)|since boot|from this boot)
+what went wrong (since boot|on this boot|in the system log)
+(show|check) the (system log|journal|system logs) for errors
+journalctl -p err [-b]
+any errors in the (journal|system log|logs)
+
+@ boot_time
+$ systemd-analyze
+how long did (boot|booting|startup|the boot|it take to boot) [take]
+(show|what is|what's) [the|my] (boot|startup) time
+systemd-analyze
+how fast (did it|does it|did this) boot
+
+@ boot_blame
+$ systemd-analyze blame | head -n 15
+what (slowed down|is slowing down|slows down|is slowing) (boot|startup|my boot|the boot)
+(which|what) services (take the longest|are slowest|are the slowest) (to start|at boot|on startup)
+systemd-analyze blame
+why is (boot|startup|booting) (so slow|slow|taking so long)
+
+# ------------------------------------------------------------------ power, sound, screen
+@ reboot !2
+$ systemctl reboot
+(reboot|restart) [the|this|my] (machine|computer|system|laptop|pc|box) [now]
+reboot [now]
+restart [now]
+
+@ poweroff in:dur? !2
+$$
+(shut down|shutdown|power off|turn off|switch off) [the|this|my] (machine|computer|system|laptop|pc) [now]
+(shut down|shutdown|power off|poweroff) [now]
+(shut down|shutdown|power off|turn off) [the (computer|machine|laptop)] (in|after) {in}
+turn (the computer|the laptop|this machine|it) off (in|after) {in}
+
+@ shutdown_cancel
+$ shutdown -c
+cancel [the] [scheduled|pending] (shutdown|reboot|power off)
+(abort|stop|call off) the [scheduled|pending] (shutdown|reboot)
+shutdown -c
+
+@ suspend !1
+$ systemctl suspend
+(suspend|sleep) [the|this|my] (machine|computer|laptop|system)
+suspend
+put (the|this|my) (machine|computer|laptop|system) to sleep
+go to sleep
+
+@ hibernate !1
+$ systemctl hibernate
+hibernate [the|this|my] [machine|computer|laptop|system]
+put (the|this|my) (machine|computer|laptop) into hibernation
+
+@ lock
+$ loginctl lock-session
+lock [the|my] (screen|session|computer|laptop|desktop)
+lock it
+
+@ vol_set pct:pct
+$ wpctl set-volume @DEFAULT_AUDIO_SINK@ {pct}%
+(set|change|put|turn) [the] (volume|sound|audio) (to|at) {pct}
+volume [to|at] {pct}
+make the volume {pct}
+
+@ vol_up
+$ wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 10%+
+(turn|crank) [the] (volume|sound) up [a bit|a little|a notch]
+(turn up|raise|increase|bump|bump up) the (volume|sound)
+(make it|make the sound) louder
+louder
+volume up
+
+@ vol_down
+$ wpctl set-volume @DEFAULT_AUDIO_SINK@ 10%-
+turn [the] (volume|sound) down [a bit|a little|a notch]
+(turn down|lower|decrease|reduce) the (volume|sound)
+(make it|make the sound) quieter
+quieter
+volume down
+
+@ mute
+$ wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+(mute|unmute) [the] [sound|audio|volume|speakers]
+toggle mute
+(turn|switch) (off|on) the sound
+silence the (speakers|sound|audio)
+
+@ bright_set pct:pct
+$ brightnessctl set {pct}%
+(set|change|put|turn) [the] [screen|display] brightness (to|at) {pct}
+brightness [to|at] {pct}
+make the (screen|display) {pct} bright
+
+@ bright_up
+$ brightnessctl set +10%
+(turn up|raise|increase|bump|bump up) the [screen|display] brightness
+make the (screen|display) brighter
+brighter [screen]
+brightness up
+
+@ bright_down
+$ brightnessctl set 10%-
+(dim|darken) the (screen|display) [a bit|a little]
+(lower|reduce|decrease|turn down) the [screen|display] brightness
+make the (screen|display) (dimmer|darker)
+brightness down
+
+# ------------------------------------------------------------------ packages
+@ pkg_install names:words !1
+$$
+install {names}
+install {names} [for me|on this machine|from the repos]
+get {names} installed
+i need {names} installed
+add the {names} (package|program|app|tool)
+set up {names}
+download and install {names}
+(pacman -S|apt install|install the package|install package|install the program|dnf install) {names}
+put {names} on my system
+
+@ pkg_remove names:words !2
+$$
+uninstall {names}
+uninstall the {names} (package|program|app|tool)
+remove the {names} (package|program|app|tool|software)
+remove the (package|program|app) {names}
+get rid of the (package|program|app) {names}
+delete the (package|program|app) {names} from my system
+uninstall {names} [completely|from this machine]
+(pacman -R|apt remove|remove package|purge the package|dnf remove) {names}
+
+@ pkg_search term:text
+$$
+search for a (package|program|app|tool) (called|named) {term}
+is there a (package|program|app|tool) for {term}
+find (packages|programs) related to {term}
+look up {term} in the repos
+search (packages|the repos|the package manager) for {term}
+what packages (match|are there for|are related to) {term}
+(pacman -Ss|apt search|package search) {term}
+
+@ sys_update !1
+$$
+update the system
+upgrade everything
+update all packages
+install updates
+run a full system upgrade
+check for and install updates
+upgrade all my packages
+system update
+update my system
+do a full upgrade
+bring everything up to date
+update everything
+apply all available updates
+upgrade the system
+
+@ pkg_info name:word
+$$
+(show|get|give me) (info|information|details) (about|on|for) the {name} package
+(what is|what's) the {name} package [for]
+(which|what) version of {name} is (installed|in the repos)
+package (info|details) (for|of|on) {name}
+(pacman -Qi|pacman -Si|apt show) {name}
+describe the {name} package
+
+@ pkg_has name:word
+$$
+is {name} installed
+do i have {name} installed
+(check|see) (if|whether) {name} is installed
+have i (got|installed) {name}
+is the {name} package installed
+
+@ pkg_owner file:file
+$$
+(which|what) package (owns|provides|installed|contains|ships) {file}
+(which|what) package does {file} (belong to|come from)
+who owns {file} in the package manager
+(pacman -Qo|dpkg -S) {file}
+
+@ pkg_files name:word
+$$
+(what|which) files (does|did) [the] {name} [package] install
+(list|show) [the] files (in|of|from|installed by) the {name} package
+(pacman -Ql|dpkg -L) {name}
+where did {name} put its files
+
+@ pkg_clean !1
+$$
+(clean|clear|empty|wipe) the (package|pacman|apt) cache
+(clean up|clear out) (old|cached|downloaded) packages
+free up space from the package cache
+
+@ pkg_orphans
+$$
+(list|show|find) (orphan|orphaned|unneeded|unused) packages
+(which|what) packages are (orphans|no longer needed|not needed anymore|unused)
+packages nothing depends on
+
+@ pkg_autoremove !2
+$$
+(remove|uninstall|delete|purge|clean up) (orphan|orphaned|unneeded|unused) packages
+(remove|uninstall) packages (that are no longer needed|nothing depends on)
+autoremove
+apt autoremove
+
+@ pkg_upgradable
+$$
+(which|what) packages (can be|need to be) (updated|upgraded)
+(are there|any|check for) [any] (updates|upgrades) [available]
+(list|show) (available|pending) (updates|upgrades)
+what would (an update|a system update|updating) (change|upgrade)
+is my system up to date
+
+# ------------------------------------------------------------------ python, node, projects
+@ pip_install names:words !1
+$ pip install {names}
+pip install {names}
+install [the] {names} (with|using|via|from) pip
+install the python (package|library|module|packages) {names}
+(get|add) the {names} python (package|library|module)
+
+@ pip_remove names:words !2
+$ pip uninstall {names}
+pip uninstall {names}
+(uninstall|remove) [the] {names} (with|using|via|from) pip
+(uninstall|remove) the python (package|library|module) {names}
+
+@ pip_list
+$ pip list
+pip list
+(list|show) [the|all|my] (installed python packages|python packages|pip packages)
+(what|which) python (packages|libraries|modules) (are installed|do i have)
+
+@ pip_freeze !1
+$ pip freeze > requirements.txt
+pip freeze [to requirements.txt]
+(write|save|generate|create|make) [a|the] requirements.txt
+freeze [the|my] (python|pip) (dependencies|requirements|packages) [to requirements.txt]
+
+@ pip_reqs !1
+$ pip install -r requirements.txt
+pip install -r requirements.txt
+install [the] [python] (requirements|dependencies) [from requirements.txt]
+install everything (in|from) requirements.txt
+
+@ venv_make path:path?
+$$
+(create|make|set up|new) (a|an) [python] (virtualenv|venv|virtual environment) [here]
+(create|make|set up) (a|an) [python] (virtualenv|venv|virtual environment) (in|called|named|at) {path}
+python [-m] venv [{path}]
+
+@ venv_on path:path?
+$$
+activate (the|my) (venv|virtualenv|virtual environment)
+activate the (venv|virtualenv|virtual environment) (in|at|called) {path}
+(enter|turn on|source|use) the (venv|virtualenv|virtual environment)
+source {path}/bin/activate
+
+@ venv_off
+$ deactivate
+deactivate [the] [venv|virtualenv|virtual environment]
+(leave|exit|turn off|get out of) the (venv|virtualenv|virtual environment)
+
+@ npm_install names:words? !1
+$ npm install[ {names}]
+npm (install|i) [{names}]
+install [the] (node|npm|js|javascript) (dependencies|modules|packages)
+install [the] {names} (with|using|via|from) npm
+(add|install) the (npm|node) (package|module) {names}
+
+@ npm_run script:script
+$ npm run {script}
+npm run {script}
+run the {script} (script|npm script|task) [with npm|from package.json]
+run npm {script}
+
+@ proj_test
+$$
+run [the|all the|my|all] tests
+(test|run tests for) (it|this|the project|this project|the code|everything)
+(run|start|kick off) the test suite
+do the tests pass
+
+@ proj_build
+$$
+build (it|this|the project|this project|the code|everything)
+(compile|make) (the|this) project
+run the build
+build
+
+@ proj_run
+$$
+(run|start|launch) (this|the|my) (project|app|application|program)
+start the (dev|development) server
+(spin up|fire up|boot up|bring up|launch) the (dev|development|local) server
+run it
+
+@ run_file file:file
+$$
+(run|execute|launch) {file}
+(run|execute) the (script|program|file) {file}
+(run|execute) {file} with (python|bash|node|sh)
+(python|python3|bash|node|sh) {file}
+
+@ ver cmd:cmdname
+$ {cmd} --version
+(what|which) version of {cmd} (do i have|is installed|am i running|am i using|is this)
+{cmd} (version|--version)
+(show|check|print) [the|my] {cmd} version
+version of {cmd}
+
+@ which cmd:cmdname
+$ command -v {cmd}
+where is {cmd} [installed|located]
+which {cmd}
+(path|location) (to|of) [the] {cmd} (binary|executable|command|program)
+where does {cmd} live
+(find|locate) the {cmd} (binary|executable|command)
+
+@ man cmd:cmdname
+$ man {cmd}
+(show|open|read|pull up) [the] (man page|manual|docs|documentation|help|help page) (for|of|on) {cmd}
+man {cmd}
+how do i use {cmd}
+help (with|for|on) {cmd}
+(what does|what's) [the] {cmd} [command] (do|mean)
+explain the {cmd} command
+what is [the] {cmd} [command] (for|used for)
+tell me about the {cmd} command
+(what are|show|list) the (options|flags|arguments) (for|of) {cmd}
+
+# ------------------------------------------------------------------ docker
+@ dk_ps
+$ docker ps
+docker ps
+(list|show) [the|all|my] [running] [docker] containers
+(what|which) [docker] containers are (running|up|alive)
+running containers
+
+@ dk_ps_all
+$ docker ps -a
+docker ps -a
+(list|show) all [docker] containers (including|even) (stopped|exited|dead) ones
+(list|show) (stopped|exited|all stopped) [docker] containers
+
+@ dk_images
+$ docker images
+docker images
+(list|show) [the|all|my] docker images
+(what|which) [docker] images (do i have|are there|are (downloaded|pulled|local))
+
+@ dk_stop name:container !1
+$ docker stop {name}
+docker stop {name}
+stop [the] [docker] container [called|named] {name}
+stop the {name} container
+(shut down|halt|bring down) the {name} container
+
+@ dk_start name:container
+$ docker start {name}
+docker start {name}
+start [the] [docker] container [called|named] {name}
+start the {name} container [again|back up]
+
+@ dk_restart name:container !1
+$ docker restart {name}
+docker restart {name}
+restart [the] [docker] container [called|named] {name}
+restart the {name} container
+
+@ dk_rm name:container !2
+$ docker rm {name}
+docker rm {name}
+(remove|delete|rm) [the] [docker] container [called|named] {name}
+(remove|delete) the {name} container
+
+@ dk_rmi image:image !2
+$ docker rmi {image}
+docker rmi {image}
+(remove|delete) [the] [docker] image [called|named] {image}
+(remove|delete) the {image} image
+
+@ dk_logs name:container
+$ docker logs --tail 100 {name}
+docker logs {name}
+(show|get|print|see) [the] logs (of|for|from) [the] [docker] container {name}
+(show|get|print|see) [the] logs (of|for|from) the {name} container
+(what's|what is) the {name} container (logging|printing|saying)
+logs (of|for|from) the {name} container
+
+@ dk_follow name:container
+$ docker logs -f {name}
+docker logs -f {name}
+(follow|tail|stream|watch) [the] logs (of|for|from) [the] [docker] container {name}
+(follow|tail|stream|watch) the {name} container logs
+
+@ dk_shell name:container
+$ docker exec -it {name} sh
+docker exec -it {name} (sh|bash)
+(open|get|start|give me) a shell (in|inside|into|on) [the] [docker] container {name}
+(open|get|start|give me) a shell (in|inside|into) the {name} container
+(exec|get|go|jump) into [the] [container] {name} [container]
+(enter|attach to) the {name} container
+
+@ dk_pull image:image
+$ docker pull {image}
+docker pull {image}
+pull [the] [docker] image {image}
+pull the {image} image [from docker hub]
+(download|get|fetch) the {image} docker image
+
+@ dk_run image:image
+$ docker run --rm -it {image}
+docker run {image}
+(run|start|launch|spin up) (a|an) {image} container
+(run|start|launch) [a container from] the {image} image
+
+@ dk_build tag:word?
+$$
+docker build [-t {tag}] [.]
+build (the|a|this) docker image [(called|named|tagged|as|and tag it) {tag}]
+build (the|this) dockerfile [(as|into) {tag}]
+
+@ dk_prune !2
+$ docker system prune
+docker system prune
+(clean up|prune|clear out|clean) docker
+(remove|delete|prune) (unused|dangling|old) docker (stuff|data|images|containers|images and containers)
+free up docker (disk space|space)
+
+@ dk_stop_all !2
+$ docker stop $(docker ps -q)
+stop (all|every|all the|all running) [docker] (containers|container)
+stop every running container
+(shut down|kill) all [the] [docker] containers
+
+@ dk_stats
+$ docker stats --no-stream
+docker stats
+how much (memory|cpu|ram) are (the|my) containers using
+(show|check) [docker] container (resource usage|stats|usage)
+
+@ compose_up !1
+$ docker compose up -d
+docker compose up [-d]
+docker-compose up
+(start|bring up|launch|spin up|run) (the|my|docker) compose (stack|services|project|setup)
+compose up
+
+@ compose_down !1
+$ docker compose down
+docker compose down
+docker-compose down
+(stop|bring down|tear down|shut down) (the|my|docker) compose (stack|services|project|setup)
+compose down
+
+@ compose_logs
+$ docker compose logs --tail 100
+docker compose logs
+(show|see|get) [the] (compose|docker compose|stack) logs
+logs (of|for|from) the compose (stack|services)
+
+@ compose_ps
+$ docker compose ps
+docker compose ps
+(list|show) [the] compose (services|containers)
+(what's|what is) running in (compose|the compose stack)
+
+# ------------------------------------------------------------------ git
+@ git_status
+$ git status
+git status
+(what's|what is|whats) changed in git
+show git status
+(what's|what is) the state of the repo
+any uncommitted changes
+status of the repo
+what files have i changed
+check git status
+repo status
+do i have uncommitted changes
+(what's|what is) modified in this repo
+
+@ git_log n:count?
+$$
+show the last {n} commits
+last {n} commits
+git log [last|-n] {n}
+show me {n} (latest|recent|most recent) commits
+what were the last {n} commits
+the {n} most recent commits
+git log
+recent commits
+commit history
+show the commit history
+what was committed recently
+show recent commits
+history of this repo
+list the commits
+show the log
+show git history
+
+@ git_graph
+$ git log --oneline --graph --all
+(show|draw|print) the (branch|commit|git) graph
+git log --graph
+(show|visualize|visualise) (the|how the) branches [and merges|as a tree|as a graph]
+
+@ git_diff
+$ git diff
+show the diff
+what did i change
+git diff
+show unstaged changes
+show my changes
+diff of the working tree
+what are the differences
+show what i changed in the code
+see the changes i made
+
+@ git_diff_staged
+$ git diff --staged
+git diff (--staged|--cached)
+(show|see) [the] staged (changes|diff)
+(what's|what is|what have i) staged [for commit]
+diff of (what's staged|the staged files|the index)
+what am i about to commit
+
+@ git_pull !1
+$ git pull
+pull the latest changes
+git pull
+update from remote
+pull from origin
+get the latest code
+pull the newest commits
+sync with the remote
+pull
+fetch and merge the latest
+bring the repo up to date
+
+@ git_push !1
+$ git push
+push my commits
+git push
+push to remote
+upload my changes
+push to origin
+push the branch
+send my commits to the server
+push
+publish my commits
+push everything up
+
+@ git_push_new !1
+$ git push -u origin HEAD
+push (this|the|my) [new] branch (and set upstream|for the first time|to origin for the first time)
+publish (this|the|my) branch
+git push -u origin [HEAD]
+push and set [the] upstream
+(create|set up) (this|the) branch on (the remote|origin|github)
+
+@ git_fetch
+$ git fetch --all --prune
+git fetch [--all]
+fetch (from|all) (the remote|origin|remotes|everything)
+fetch [the] (latest|new) (commits|branches|refs) without merging
+update (the|my) remote (branches|refs)
+
+@ git_commit msg:text !1
+$ git commit -m {msg}
+commit with [the] message {msg}
+git commit -m {msg}
+make a commit saying {msg}
+commit my (staged changes|changes) with [the] message {msg}
+commit: {msg}
+create a commit (called|saying|with message) {msg}
+commit saying {msg}
+commit (as|with) {msg}
+
+@ git_commit_all msg:text !1
+$ git add -A && git commit -m {msg}
+commit (everything|all changes|all my changes|all files|all of it) (as|with message|with the message|saying) {msg}
+(add|stage) (everything|all|all changes|all files) and commit (as|with message|with the message|saying) {msg}
+git commit -am {msg}
+(add|stage) and commit [everything] (as|with message|saying) {msg}
+save all my (work|changes) (as|in) a commit (called|saying|with message) {msg}
+
+@ git_add_all
+$ git add -A
+git add (-A|.|--all)
+(stage|add) (everything|all changes|all files|all my changes|all of it) [to git|for commit]
+(stage|add) all (the|my) (changes|files|modified files)
+
+@ git_add file:file
+$ git add {file}
+git add {file}
+(stage|add) {file} [to git|for commit|to the index|to the commit]
+(stage|add) the file {file}
+
+@ git_unstage file:file?
+$$
+git restore --staged [{file}]
+unstage {file}
+unstage (everything|all files|all changes|all)
+(remove|take) {file} (from|out of) (the staging area|the index|staging)
+git reset [HEAD] {file}
+
+@ git_checkout branch:branch
+$ git switch {branch}
+switch to branch {branch}
+checkout {branch}
+go to the {branch} branch
+change to branch {branch}
+git checkout {branch}
+switch to the {branch} branch
+check out [branch|the branch] {branch}
+move to branch {branch}
+git switch {branch}
+(hop|jump) (on|to|onto) [the] {branch} [branch]
+
+@ git_new_branch branch:branch
+$ git switch -c {branch}
+create a new branch called {branch}
+make a branch [called|named] {branch}
+new branch {branch}
+start a branch named {branch}
+branch off into {branch}
+create branch {branch}
+git checkout -b {branch}
+make a new branch (called|named) {branch}
+start a new branch [called|named] {branch}
+git switch -c {branch}
+
+@ git_branches
+$ git branch -a
+git branch [-a]
+(list|show) [all|the|all the|my] branches
+(what|which) branches (are there|exist|do i have|do we have)
+branches in this repo
+
+@ git_branch_cur
+$ git branch --show-current
+(which|what) branch am i on
+(show|what is|what's|print) (the|my) current branch
+current branch
+(which|what) branch is (this|checked out)
+
+@ git_branch_del branch:branch !2
+$ git branch -d {branch}
+(delete|remove|drop|get rid of) [the] branch [called|named] {branch}
+(delete|remove|drop|get rid of) the {branch} branch
+git branch (-d|-D) {branch}
+
+@ git_merge branch:branch !1
+$ git merge {branch}
+merge {branch} [in|into this branch|into the current branch|here]
+merge [the] branch {branch} [in|into this one]
+merge the {branch} branch [in|into this one|into mine]
+git merge {branch}
+bring {branch} into (this|the current|my) branch
+
+@ git_rebase branch:branch !1
+$ git rebase {branch}
+rebase (onto|on|on top of) {branch}
+rebase (this|my|the current) branch (onto|on|on top of) {branch}
+git rebase {branch}
+
+@ git_stash !1
+$ git stash
+git stash
+stash (my|the|these|all) [uncommitted|local] (changes|work|edits)
+(put|set) my changes aside
+stash (it|everything|them)
+shelve my changes
+
+@ git_stash_pop
+$ git stash pop
+git stash pop
+(pop|apply|restore|bring back|unstash) (the|my) (stash|stashed changes|stashed work)
+unstash
+get my stashed changes back
+
+@ git_stash_list
+$ git stash list
+git stash list
+(list|show) [the|my|all] stashes
+(what's|what is|what do i have) (in the stash|stashed)
+
+@ git_undo !1
+$ git reset --soft HEAD~1
+undo (the|my) last commit [but keep the changes|and keep my changes]
+(uncommit|un-commit) [the last commit]
+git reset --soft HEAD~1
+take back (the|my) last commit
+(roll back|rollback) the last commit but keep [the|my] (changes|work|files)
+
+@ git_revert !1
+$ git revert HEAD
+revert (the|my) last commit
+git revert HEAD
+make a commit that undoes the last (one|commit)
+(back out|reverse) the last commit [with a new commit]
+
+@ git_discard !2
+$ git restore .
+(discard|throw away|drop|undo|revert|wipe|get rid of) (all|all my|my|the) (uncommitted|local|unstaged|working) changes
+(discard|throw away|drop) all changes
+git (restore|checkout) .
+reset (the working tree|all files|everything) to the last commit
+git reset --hard
+
+@ git_discard_file file:file !2
+$ git restore {file}
+(discard|throw away|drop|undo|revert) [my|the] changes (to|in) {file}
+git (restore|checkout) {file}
+git checkout -- {file}
+(reset|restore) {file} to (the last commit|how it was|its committed version|head)
+
+@ git_clean !2
+$ git clean -fd
+git clean [-fd|-f]
+(delete|remove|clean up|clean out|get rid of) [all|the|all the] untracked files
+(delete|remove) files (git doesn't track|not tracked by git|that aren't in git)
+
+@ git_clone url:url into:path?
+$ git clone {url}[ {into}]
+git clone {url} [{into}]
+clone {url} [(into|to|in) {into}]
+clone the (repo|repository) [at|from] {url} [(into|to|in) {into}]
+(check out|download|grab|get) the (repo|repository) [at|from] {url}
+
+@ git_remote
+$ git remote -v
+git remote [-v]
+(show|list|what are|what's) [the|my] (remotes|remote|remote url|remote urls|git remotes)
+where does this repo (push to|come from|point|pull from)
+(what's|what is) the (origin|upstream) url
+
+@ git_remote_add url:url !1
+$ git remote add origin {url}
+git remote add origin {url}
+(add|set) {url} as (the|a) (remote|origin)
+(add|set) (the|a) (remote|origin) (to|as) {url}
+point (this repo|origin) (at|to) {url}
+
+@ git_init !1
+$ git init
+git init
+(init|initialize|initialise|start|create|make) (a|a new|an empty) [git] (repo|repository) [here|in this folder]
+(turn|make) this (folder|directory) into a [git] (repo|repository)
+
+@ git_amend !1
+$ git commit --amend --no-edit
+git commit --amend
+amend (the|my) last commit
+add (this|these changes|the staged changes|it) to (the|my) (last|previous) commit
+(fix up|fixup|update) the last commit [with these changes]
+
+@ git_show
+$ git show --stat
+git show
+(show|what was|what's in|what is in) the last commit
+what did the last commit change
+(show|see) (the|my) (latest|most recent|last) commit
+
+@ git_blame file:file
+$ git blame {file}
+git blame {file}
+who (wrote|changed|last changed|edited|touched) [each line of|the lines of|the lines in] {file}
+blame {file}
+(show|see) who changed (what|each line) in {file}
+
+@ git_log_file file:file
+$ git log --oneline -- {file}
+(show|list|see) [the] (history|commits|commit history|log) (of|for) [the file] {file}
+git log {file}
+(which|what) commits (changed|touched|modified) {file}
+when (was|did) {file} (last changed|changed|change) in git
+
+@ git_tag name:word !1
+$ git tag {name}
+git tag {name}
+tag (this|the current|this commit|the last commit|head) (as|with) {name}
+(create|make|add) (a|the) tag [called|named] {name}
+
+@ git_tags
+$ git tag --list
+git tag [--list|-l]
+(list|show) [all|the] tags
+(what|which) tags (are there|exist|do we have)
+
+@ git_authors
+$ git shortlog -sn
+git shortlog [-sn]
+who (has|has made|made) the most commits
+(commits|commit count|number of commits) (per|by|for each) (author|person|contributor)
+who (contributed|committed) [the most|to this repo]
+(list|show) [the] (contributors|authors|committers)
+
+# ------------------------------------------------------------------ folders and single files
+@ mkdir path:path
+$ mkdir -p {path}
+make a folder called {path}
+create a directory [called|named] {path}
+create folder {path}
+new folder [named|called] {path}
+mkdir [-p] {path}
+make a new directory (called|named) {path}
+create a new folder (called|named) {path}
+make (the directory|a dir|directory|a folder) {path}
+
+@ cd path:path
+$ cd {path}
+go to {path}
+cd [into|to] {path}
+take me to {path}
+switch to {path}
+change directory to {path}
+navigate to {path}
+jump to {path}
+enter {path}
+(go|move|step|hop) into {path}
+
+@ cd_back
+$ cd -
+(go|take me|cd|jump|switch) back [to (where i was|the previous (folder|directory)|the last (folder|directory))]
+cd -
+(go|return|cd) to the (previous|last) (folder|directory|dir)
+back to where i was
+
+@ cd_up
+$ cd ..
+(go|move|cd|step) up [a|one] [level|directory|folder|dir]
+cd ..
+(go|cd|move) to the parent (folder|directory|dir)
+up one (level|directory|folder)
+
+@ cd_home
+$ cd
+(go|take me|cd|jump) [back] home
+cd (~|home)
+(go|take me|cd) to (my|the) home (folder|directory|dir)
+
+@ pwd
+$ pwd
+where am i
+pwd
+(what|which) (folder|directory|dir) (am i in|is this)
+(show|print|what is|what's) (the|my) (current|working|current working) (directory|folder|dir|path)
+(what's|what is) the path (of|to) (this|the current) (folder|directory)
+
+@ ls path:path?
+$$
+ls [-la|-l|-a|-lah] [{path}]
+(what's|what is|whats) in (here|this folder|this directory|the current folder)
+(what's|what is|whats) (in|inside) the {path} (folder|directory|dir)
+(what's|what is|whats) (in|inside) {path}
+look (inside|in|into) {path}
+(show|list) the contents of (this|the current) (folder|directory|dir)
+(show|list) the contents of the (folder|directory|dir) {path}
+(show|list) everything in {path} with (details|permissions|sizes and dates)
+ll [{path}]
+(list|show) (this|the current) (folder|directory)
+
+@ tree path:path? depth:count?
+$$
+tree [{path}]
+(show|print|draw|display) [the|a] (folder|directory|file|dir) (tree|structure|layout|hierarchy) [(of|for|in|under) {path}]
+(show|print) {path} as a tree
+tree [of|for] {path} [(to|up to|with|at) (depth|a depth of) {depth}|{depth} levels deep]
+(show|print|draw) the (tree|structure) [of this (folder|project|repo)] {depth} levels deep
+how is (this project|this folder|this repo|{path}) (laid out|structured|organised|organized)
+
+@ view file:file
+$$
+show the contents of {file}
+show me (what's in|the contents of|the file) {file}
+print {file}
+cat {file}
+display the file {file}
+(what's|what is|whats) in {file}
+read {file}
+open {file} (and show it|in the terminal)
+(dump|output|view|show) {file}
+
+@ page file:file
+$ less {file}
+less {file}
+(page|scroll) through {file}
+(open|view|read|show) {file} (in less|in a pager|page by page|one page at a time)
+let me scroll through {file}
+
+@ edit file:file
+$$
+edit {file}
+open {file} (in|with) (vim|nano|my editor|the editor|an editor|vi|neovim|nvim|emacs)
+(vim|nano|vi|nvim|emacs) {file}
+(open|bring up) {file} (for editing|to edit)
+let me (edit|change|modify) {file}
+(make|i want to make) changes to {file}
+
+@ open target:file
+$$
+open {target}
+open {target} (with|in) (the default|its default|the right) (app|application|program|viewer)
+xdg-open {target}
+(launch|start|fire up|open up) {target}
+open the (file|folder|app|program) {target}
+
+@ follow file:file
+$ tail -f {file}
+follow {file}
+tail {file} (live|in real time|continuously|and keep following)
+watch {file} (for new lines|for changes|as it grows|live)
+keep watching {file}
+stream {file}
+show new lines in {file} as they come
+tail -f {file}
+monitor {file} [in real time|live]
+
+@ make_exec file:file !1
+$ chmod +x {file}
+make {file} executable
+give {file} (execute permission|execute permissions|exec rights)
+chmod +x {file}
+let me run {file}
+mark {file} as executable
+make {file} runnable
+allow {file} to be executed
+
+@ touch file:file !1
+$ touch {file}
+touch {file}
+(create|make|add) (a|an|a new|an empty|a blank|a new empty) file [called|named] {file}
+(create|make) [the] file {file}
+new [empty] file [called|named] {file}
+
+@ write text:text file:file !1
+$ echo {text} > {file}
+(write|put|save|echo) {text} (to|into|in) {file}
+(create|make) [a file [called]] {file} (containing|with the text|with the content|that says) {text}
+echo {text} > {file}
+(overwrite|replace the contents of) {file} with {text}
+
+@ append text:text file:file !1
+$ echo {text} >> {file}
+(append|add) {text} to [the end of|the bottom of] {file}
+(append|add) the line {text} to [the end of] {file}
+(add|append) a line (saying|that says|with|containing) {text} to {file}
+echo {text} >> {file}
+(put|stick|tack) {text} (at|on) the (end|bottom) of {file}
+
+@ link target:file name:file !1
+$ ln -s {target} {name}
+ln -s {target} {name}
+(symlink|link|soft link) {target} (to|as|at) {name}
+(create|make) a (symlink|symbolic link|link|soft link|shortcut) (to|for) {target} (called|named|at|as) {name}
+(create|make) a (symlink|symbolic link|link) (called|named) {name} (pointing to|that points to|to|for) {target}
+
+@ rename old:file new:file !1
+$ mv {old} {new}
+rename {old} to {new}
+rename [the] (file|folder|directory) {old} to {new}
+change the name of {old} to {new}
+call {old} {new} instead
+(mv|rename) {old} {new}
+give {old} the (new name|name) {new}
+
+@ backup file:file
+$$
+(back up|backup) {file}
+(make|create|save|keep) a (backup|backup copy|spare copy|safety copy) of {file}
+copy {file} to {file}.bak
+(duplicate|clone) {file} (as a backup|before i (edit|change|touch) it)
+
+@ diff a:file b:file
+$ diff -u {a} {b}
+diff {a} [and] {b}
+compare {a} (with|to|and|against) {b}
+(what's|what is|whats) (the difference|different) between {a} and {b}
+(show|see|find) [the] (differences|difference|diff) between {a} and {b}
+how (does|do) {a} (differ|and {b} differ) [from {b}]
+are {a} and {b} (the same|identical|different)
+
+@ checksum file:file
+$ sha256sum {file}
+(sha256|sha256sum|checksum|hash|sha) [of|for] {file}
+(get|compute|calculate|show|print|what is|what's) the (sha256|checksum|hash|sha256 sum|sha256 hash|sha) (of|for) {file}
+(hash|checksum) the file {file}
+verify the (checksum|hash) of {file}
+
+@ md5 file:file
+$ md5sum {file}
+(md5|md5sum) [of|for] {file}
+(get|compute|calculate|show|what is|what's) the (md5|md5 sum|md5 hash|md5 checksum) (of|for) {file}
+
+@ ftype file:file
+$ file {file}
+what (type|kind|sort|format) of file is {file}
+(what is|what's) {file} [exactly|really]
+file {file}
+(what|which) (format|type) is {file} [in]
+(identify|detect) the (type|format) of {file}
+
+@ finfo file:file
+$ stat {file}
+stat {file}
+when was {file} (last modified|modified|created|last changed|changed|last touched|last edited)
+(who owns|what are the permissions (of|on)|what permissions does) {file} [have]
+(show|get|give me) (info|details|metadata|the permissions|the owner|information) (on|about|for|of) {file}
+how old is {file}
+
+@ extract archive:file into:path? !1
+$$
+(extract|unzip|unpack|untar|decompress|open up|expand|unarchive|uncompress) {archive} [(into|to|in) {into}]
+(extract|unzip|unpack|untar|decompress) (the archive|the file|this) {archive} [(into|to|in) {into}]
+(extract|unzip|unpack) {archive} (here|in place)
+tar (-xf|xf|-xzf|xzf|-xvf) {archive}
+
+@ archive_list archive:file
+$$
+(what's|what is|whats) (in|inside) the (archive|zip|tarball|zip file|tar file) {archive}
+(list|show|peek at|see) the (contents|files) (of|in|inside) the (archive|zip|tarball|zip file) {archive}
+(list|show) (what's|what is) (in|inside) {archive} without (extracting|unpacking|unzipping) [it]
+(tar -tf|unzip -l|tar tf) {archive}
+look inside the (archive|zip|tarball) {archive}
+
+# ------------------------------------------------------------------ shell and environment
+@ var_show name:envname
+$ printenv {name}
+(what is|what's|whats|show|print|echo) [the value of] [the] [env|environment] [variable|var] {name}
+(what is|what's) {name} set to
+(what is|what's) [in] my {name} [variable|var]
+(echo|print) ${name}
+printenv {name}
+is {name} set
+
+@ var_set name:envname value:text
+$$
+set [the] [env|environment] [variable|var] {name} to {value}
+export {name}={value}
+export {name} (as|to) {value}
+(make|set) {name} (equal to|=|be) {value}
+(define|create) (an|the) (env|environment) (variable|var) {name} (with value|as|=|equal to|set to) {value}
+
+@ var_unset name:envname
+$ unset {name}
+unset {name}
+(unset|clear|remove|delete) the [env|environment] (variable|var) {name}
+
+@ path_show
+$ echo "$PATH" | tr ':' '\n'
+(show|print|list|what is|what's) [in] (my|the) path [variable|env|entries]
+echo $PATH
+(what|which) (folders|directories|dirs) are (in|on) my path
+(show|list) [the] path (entries|directories|folders) [one per line]
+
+@ path_add dir:path
+$$
+add {dir} to [my|the] path
+(put|include|append|prepend) {dir} (in|on|to) [my|the] path
+export PATH with {dir}
+make {dir} part of [my|the] path
+
+@ alias_make name:word cmd:text
+$$
+alias {name}={cmd}
+(make|create|add|define|set up) (an|a) alias [called|named] {name} (for|that runs|to run|=|meaning|pointing to) {cmd}
+alias {name} (to|as) {cmd}
+make {name} (an alias|a shortcut|short) for {cmd}
+
+@ aliases
+$ alias
+alias
+(list|show) [all|my|the] aliases
+(what|which) aliases (do i have|are (defined|set))
+
+@ clear
+$ clear
+clear [the] (screen|terminal|console)
+clear
+(clean|wipe|reset) the (screen|terminal)
+cls
+
+@ reload
+$ source ~/.bashrc
+(reload|refresh|re-read|resource|source) (my|the) (bashrc|shell config|shell|bash config|.bashrc)
+source ~/.bashrc
+(apply|load|pick up) my bashrc changes
+
+@ calc expr:expr
+$$
+(calculate|compute|calc|evaluate|work out) {expr}
+(what is|what's|whats|how much is) {expr}
+{expr} =
+math: {expr}
+
+@ timer in:dur
+$$
+(set|start) a timer for {in}
+timer [for] {in}
+(remind|notify|alert|ping|tell) me in {in}
+(wake|poke) me (up|) in {in}
+countdown [of|for] {in}
+
+@ cron_list
+$ crontab -l
+crontab -l
+(list|show) [my|the|all] (cron jobs|cronjobs|crontab|scheduled jobs)
+(what|which) cron jobs (do i have|are (set up|scheduled))
+
+@ cron_edit
+$ crontab -e
+crontab -e
+(edit|open|change) (my|the) (crontab|cron jobs|cron table)
+(add|create|schedule) a cron job
+
+# ------------------------------------------------------------------ the previous command
+@ again
+$$
+(again|redo|repeat|rerun|re-run)
+(run|do|execute|try) (that|it|the last command|the same command|the previous command|the last one) again
+(run|do|execute|try) again
+(repeat|redo|rerun|re-run|retry) (that|it|the last command|the last one|the previous command)
+(one more time|once more|same again)
+(run|do) the same (thing|command) [again]
+!!
+
+@ watch_last n:count?
+$$
+(run|do|repeat|execute) (that|it|the last command) every {n} seconds
+(run|do|repeat|execute) (that|it|the last command) (repeatedly|over and over|in a loop|continuously)
+(keep|keep on) (running|repeating|doing) (that|it|the last command) [every {n} seconds]
+watch (that|it|the last command) [every {n} seconds]
+(refresh|rerun) (that|it) every {n} (seconds|secs|s)
+
+@ time_last
+$$
+time (that|it|the last command)
+how long does (that|it|the last command) take [to run]
+(measure|check) how long (that|it|the last command) takes
+(benchmark|clock) (that|it|the last command)

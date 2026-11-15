@@ -1,0 +1,125 @@
+# The core of kural's program language: pipeline stages. Read by kural/ir.py and by the Rust code.
+#
+#   % kind value value ...          a set of fixed values (an "enum")
+#   & list name name ...            a named list of stages
+#   @ name SRC DST slot slot ...    a stage: SRC is the data type it takes ("-" = starts a pipeline), DST what it gives
+#                                   slot "name:type" copies words (type says how they are read), "name:type?" may be left out,
+#                                   slot "name=kind" is one value of the enum "kind"
+#   *commands                       the stand-alone commands of commands.txt go here, in their order
+#
+# Data types: files, lines, procs, done (the pipeline has ended), neg (after "not"), sudo (after "sudo").
+# The order of stages fixes the model's token numbers: append new stages, never reorder, or retrain.
+
+% mode is has starts ends
+% fkey size time name
+% lkey alpha num
+% pkey mem cpu
+% order asc desc
+% fmt tgz zip
+% force soft hard
+% what anyfile dirs
+% sep space comma tab colon semi bar
+% prefkey trash confirm verbose
+% onoff on off
+& negatable ext name newer older contains empty hidden owner isexec
+& filter_order flat depth ext name larger smaller newer older since before contains empty hidden owner isexec
+
+@ sudo - sudo
+@ files - files what=what in:path?
+@ paths - files names:files
+@ lines - lines of:file
+@ procs - procs
+@ port - procs n:port
+@ history - lines
+@ env - lines
+@ pkgs - lines
+@ services - lines
+@ journal - lines unit:unit?
+@ dmesg - lines
+@ clipboard - lines
+@ last - lines
+@ not files neg
+@ flat files files
+@ depth files files n:count
+@ ext files files ext:ext
+@ name files files mode=mode text:glob
+@ larger files files size:size?
+@ smaller files files size:size?
+@ newer files files age:dur?
+@ older files files age:dur?
+@ since files files date:date
+@ before files files date:date
+@ contains files files text:text
+@ empty files files
+@ hidden files files
+@ owner files files user:owner
+@ isexec files files
+@ match lines lines text:text
+@ nomatch lines lines text:text
+@ uniq lines lines
+@ lrange lines lines a:count b:count
+@ lline lines lines n:count
+@ ldel lines lines n:count
+@ col lines lines n:count sep=sep
+@ lreplace lines lines old:text new:text
+@ lfreq lines lines
+@ lnum lines lines
+@ lrev lines lines
+@ lshuf lines lines
+@ lupper lines lines
+@ llower lines lines
+@ lsum lines lines
+@ lblank lines lines
+@ pname procs procs name:word
+@ puser procs procs user:owner
+@ fsort files files key=fkey order=order
+@ lsort lines lines key=lkey order=order
+@ psort procs procs key=pkey order=order
+@ ftake files files n:count?
+@ fpick files files n:count
+@ ltake lines lines n:count?
+@ ptake procs procs n:count?
+@ llast lines lines n:count?
+@ fnames files lines
+@ fcat files lines
+@ fshow files done
+@ lshow lines done
+@ pshow procs done
+@ fcount files done
+@ lcount lines done
+@ pcount procs done
+@ total files done
+@ sizes files done
+@ details files done
+@ delete files done
+@ trash files done
+@ move files done to:path
+@ copy files done to:path
+@ compress files done fmt=fmt to:file?
+@ fgrep files done text:text
+@ fopen files done
+@ fedit files done
+@ chmod files done mode:mode
+@ chown files done owner:owner
+@ rn_lower files done
+@ rn_upper files done
+@ rn_spaces files done
+@ rn_replace files done old:text new:text
+@ rn_prefix files done text:text
+@ rn_suffix files done text:text
+@ rn_ext files done ext:ext
+@ replace files done old:text new:text
+@ fhash files done
+@ by_ext files done
+@ dupes files done
+@ upload files done to:remote
+@ kill procs done force=force
+@ wcount lines done
+@ ccount lines done
+@ save lines done to:file
+@ lappend lines done to:file
+@ inplace lines done
+@ clip lines done
+@ pref - done key=prefkey state=onoff
+*commands
+@ unknown - done

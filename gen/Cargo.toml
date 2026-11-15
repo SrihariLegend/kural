@@ -1,0 +1,17 @@
+[package]
+name = "kural-gen"
+version = "0.2.0"
+edition = "2021"
+description = "Synthetic training data for kural: random valid programs with varied English requests, sharded for billions of examples"
+license = "MIT"
+repository = "https://github.com/SrihariLegend/kural"
+
+[lib]
+name = "kural_gen"
+
+[[bin]]
+name = "kural-gen"
+path = "src/main.rs"
+
+[dependencies]
+kural-engine = { path = "../engine" }

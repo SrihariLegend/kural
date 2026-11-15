@@ -1,6 +1,6 @@
 """The Rust engine (engine/), used from Python through its C interface when it has been built.
 
-run.parse uses it automatically when engine/target/release/libkural_engine.so (or KURAL_ENGINE) and the model
+run.parse uses it automatically when target/release/libkural_engine.so (or KURAL_ENGINE) and the model
 file kural/model.kural exist; otherwise the NumPy code in run.py is used. KURAL_NATIVE=0 turns it off.
 """
 import ctypes
@@ -13,7 +13,7 @@ _ENGINE = None
 
 
 def _paths():
-    lib = os.environ.get("KURAL_ENGINE") or os.path.join(_HERE, "..", "engine", "target", "release", "libkural_engine.so")
+    lib = os.environ.get("KURAL_ENGINE") or os.path.join(_HERE, "..", "target", "release", "libkural_engine.so")
     model = os.environ.get("KURAL_MODEL") or os.path.join(_HERE, "model.kural")
     return lib, model
 

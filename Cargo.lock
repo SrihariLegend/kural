@@ -5,3 +5,10 @@ version = 4
 [[package]]
 name = "kural-engine"
 version = "0.2.0"
+
+[[package]]
+name = "kural-gen"
+version = "0.2.0"
+dependencies = [
+ "kural-engine",
+]

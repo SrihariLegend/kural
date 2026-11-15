@@ -4,8 +4,9 @@ Prints the bash command for the request. It never runs anything itself.
   kural REQUEST...           the command, on stdout
   kural -v REQUEST...        also the reading of the request, confidence and alternatives (stderr)
   kural --shell REQUEST...   for the shell hook: line 1 command, line 2 risk (0-2), line 3 confidence, line 4 reading
-  kural --serve              answer requests from shell hooks until idle (started by the hook, not by hand)
-Options: --session FILE (the terminal's session file, for follow-ups), --cwd DIR
+  kural --hook REQUEST...    for the bash hook: one line, fields separated by 0x1f (see the Rust binary)
+  kural --serve              answer requests from shell hooks until idle (no longer used by the hook)
+Options: --session FILE (the terminal's session file, for follow-ups), --cwd DIR, --preview, --choose N
 """
 import os
 import sys
@@ -130,15 +131,21 @@ def answer(text, cwd=None, session_path=None, final=True, live=True, pm=None, ch
 
 def main(argv=None):
     args = list(sys.argv[1:] if argv is None else argv)
-    verbose = shell = False
+    verbose = shell = hook = preview = False
     sess = os.environ.get("KURAL_SESSION")
-    cwd = None
+    cwd, choose = None, 0
     while args and args[0].startswith("-") and args[0] != "--":
         flag = args.pop(0)
         if flag == "-v":
             verbose = True
         elif flag == "--shell":
             shell = True
+        elif flag == "--hook":
+            hook = True
+        elif flag == "--preview":
+            preview = True
+        elif flag == "--choose" and args:
+            choose = int(args.pop(0)) if args[0].isdigit() else 0
         elif flag == "--serve":
             from . import serve
             return serve.main()
@@ -148,11 +155,20 @@ def main(argv=None):
             cwd = args.pop(0)
         else:
             break
+    if args and args[0] == "--":
+        args.pop(0)
     text = " ".join(args).strip()
     if not text:
         print(__doc__.strip(), file=sys.stderr)
         return 2
-    results = answer(text, cwd=cwd or os.getcwd(), session_path=sess)
+    results = answer(text, cwd=cwd or os.getcwd(), session_path=sess, final=not preview, choose=choose)
+    if hook:
+        clean = lambda x: x.replace("\n", "\x1e").replace("\x1f", " ")
+        fields = [str(len(results))]
+        for r in results:
+            fields += [clean(r["command"]), str(r["risk"]), f"{r['confidence']:.3f}", clean(r["reading"])]
+        print("\x1f".join(fields))
+        return 0
     if not results:
         print("kural: that is outside what I can do so far", file=sys.stderr)
         return 1

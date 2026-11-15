@@ -14,10 +14,8 @@ crate-type = ["rlib", "cdylib"]
 name = "kural-parse"
 path = "src/bin/kural-parse.rs"
 
-[dependencies]
+[[bin]]
+name = "kural"
+path = "src/bin/kural.rs"
 
-[profile.release]
-opt-level = 3
-lto = "fat"
-codegen-units = 1
-panic = "abort"
+[dependencies]
