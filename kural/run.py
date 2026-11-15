@@ -109,6 +109,10 @@ class Decoder:
 def parse(text, context=None, beam=4, keep=3, P=None):
     """-> list of (program, probability, request words, positions copied as arguments), best first.
     context: words describing the previous request (ir.context_words), which arguments may also point at."""
+    if P is None:
+        from . import native
+        if native.available():
+            return native.parse(text, context, beam, keep)
     request = tok.words(text)[:MAX_REQUEST]
     if not request:
         return []

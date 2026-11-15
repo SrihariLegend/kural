@@ -99,14 +99,35 @@ Around the model, all deterministic:
 The model is trained only on synthetic data: `gen.py` and `mix.py` sample valid programs and write varied English
 for each, including follow-ups. No larger model is involved at run time.
 
+## The engine (Rust)
+
+`engine/` is the run-time model in Rust, with no dependencies: `cargo build --release --manifest-path engine/Cargo.toml`.
+When it is built, the Python front end uses it automatically through its C interface (`engine/include/kural.h`);
+otherwise the NumPy code in `kural/run.py` runs, which stays as the reference.
+
+- **One model file** (`kural/model.kural`, written by `python -m kural.export`): a JSON header with the sizes and the
+  whole grammar as tables, then 64-byte-aligned float16 tensors. It is memory-mapped, so loading is about 0.5 ms
+  and nothing is unpacked. Because the grammar travels inside the file, the engine never needs its own copy of it.
+- **Kernels**: every layer is `y = Wx + b` over contiguous weight rows, four input rows at a time, with AVX2 + FMA
+  and float16 weights converted on the fly by F16C. On other CPUs a portable path converts the weights to
+  float32 once at load and lets the compiler vectorise.
+- **Decoder**: one new token per step for all beams, keeping each beam's attention keys and values; the
+  grammar-constrained beam search is a step-for-step port of `run.py`.
+- **Checked against the reference**: `tests/compare_engines.py` runs all 851 test requests through both. They
+  give the same best reading and the same top three every time, with probabilities within 2e-6.
+  The word splitter also matches Python's on 3,016 random strings.
+- **int8 option** (`python -m kural.export --int8`): linear layers stored as int8, one scale per output row, after a
+  Hadamard rotation of the input dimension (the rotation idea from Cactus). It keeps the same best reading on all
+  851 requests and the same scores, but is 26% smaller and about 30% slower here, so float16 is the default.
+
 ## Numbers (2026-11-15, this laptop)
 
 | | |
 |---|---|
 | Parameters / file size | 3.58 M / 6.7 MB (float16), plus an 83 KB word table |
 | Run-time dependencies | Python, NumPy |
-| Live preview / Enter, with the answering process running | about 13 ms per request |
-| One-off call from the shell (`kural "..."`) | about 100 ms, mostly Python start-up |
+| Parsing, Rust engine | about 1.3 ms per request on average (11 ms with the NumPy reference); 0.5 ms to load the model |
+| One-off call from the shell (`kural "..."`) | about 60 ms, almost all of it Python start-up |
 | Peak memory | about 48 MB |
 | Training | 1.6 M synthetic requests, 12 epochs, about 20 minutes on one laptop GPU |
 
@@ -142,6 +163,8 @@ python -m kural.lexicon                               # rebuild the word table a
 python tests/evaluate.py tests/v2_dev.txt -v            # score, listing the misses
 python tests/run_commands.py                            # execute generated commands in a scratch folder
 python tests/term.py                                    # drive the bash hook in a pseudo-terminal (needs pyte)
+python -m kural.export && cargo build --release --manifest-path engine/Cargo.toml
+python tests/compare_engines.py                         # Rust engine against the NumPy reference
 ```
 
 To teach it something new: a stand-alone command is a few lines in `commands.py` (arguments, bash, phrasings).

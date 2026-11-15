@@ -1,0 +1,23 @@
+[package]
+name = "kural-engine"
+version = "0.2.0"
+edition = "2021"
+description = "Inference engine for kural: plain English to bash with a tiny grammar-constrained parser"
+license = "MIT"
+repository = "https://github.com/SrihariLegend/kural"
+
+[lib]
+name = "kural_engine"
+crate-type = ["rlib", "cdylib"]
+
+[[bin]]
+name = "kural-parse"
+path = "src/bin/kural-parse.rs"
+
+[dependencies]
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"

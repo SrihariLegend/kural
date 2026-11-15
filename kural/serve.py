@@ -64,8 +64,9 @@ def main():
         os.mkfifo(req, 0o600)
     fd = os.open(req, os.O_RDWR | os.O_NONBLOCK)
 
-    from . import cli, run
-    run.weights()
+    from . import cli, native, run
+    if not native.available():          # the Rust engine when it is built, otherwise the NumPy reference
+        run.weights()
     _sweep(d)
     buf, last = b"", time.time()
     while True:

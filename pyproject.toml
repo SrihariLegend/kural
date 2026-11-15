@@ -20,4 +20,4 @@ kural = "kural.cli:main"
 include = ["kural*"]
 
 [tool.setuptools.package-data]
-kural = ["weights.npz", "lexicon.json", "shell/*.bash"]
+kural = ["weights.npz", "model.kural", "lexicon.json", "shell/*.bash"]
