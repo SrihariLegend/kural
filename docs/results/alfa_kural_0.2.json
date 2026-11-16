@@ -67,7 +67,7 @@
  {
   "id": 13,
   "command": "printenv | sort",
-  "score": 0
+  "score": 1
  },
  {
   "id": 14,
@@ -137,7 +137,7 @@
  {
   "id": 27,
   "command": "free -h",
-  "score": 0
+  "score": 1
  },
  {
   "id": 28,
@@ -297,12 +297,12 @@
  {
   "id": 59,
   "command": "lsblk -o NAME,SIZE,TYPE,FSTYPE,MOUNTPOINTS",
-  "score": 0
+  "score": 1
  },
  {
   "id": 60,
   "command": "find . -type f -size +100M",
-  "score": 0
+  "score": 1
  },
  {
   "id": 61,
@@ -337,7 +337,7 @@
  {
   "id": 67,
   "command": "awk '!seen[$0]++' setup_nl2b_fs_1.sh",
-  "score": 0
+  "score": 1
  },
  {
   "id": 68,
@@ -422,7 +422,7 @@
  {
   "id": 84,
   "command": "cat -n setup_nl2b_fs_1.sh && cut -f40 setup_nl2b_fs_1.sh | awk '{s += $1} END {print s}'",
-  "score": 0
+  "score": 1
  },
  {
   "id": 85,
@@ -487,7 +487,7 @@
  {
   "id": 97,
   "command": "shuf setup_nl2b_fs_1.sh",
-  "score": 0
+  "score": 1
  },
  {
   "id": 98,
@@ -502,7 +502,7 @@
  {
   "id": 100,
   "command": "sort setup_nl2b_fs_1.sh | uniq -c | sort -rn | head -n 20",
-  "score": 0
+  "score": 1
  },
  {
   "id": 101,
@@ -707,27 +707,27 @@
  {
   "id": 141,
   "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 142,
   "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 143,
   "command": "find /testbed -type f -printf '%s\\t%p\\0' | sort -z -n | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 144,
   "command": "find /testbed -maxdepth 1 -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 5 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 145,
   "command": "find testbed -type f -iname '*.java' -print0 | xargs -0 -r grep -lZ -- Hello | tr '\\0' '\\n'",
-  "score": 0
+  "score": 1
  },
  {
   "id": 146,
@@ -737,7 +737,7 @@
  {
   "id": 147,
   "command": "find testbed/dir1 -type f && curl -LO testbed/dir2",
-  "score": 0
+  "score": 1
  },
  {
   "id": 148,
@@ -782,7 +782,7 @@
  {
   "id": 156,
   "command": "find . -maxdepth 1 -type f && tree /system/folder2",
-  "score": 0
+  "score": 1
  },
  {
   "id": 157,
@@ -877,7 +877,7 @@
  {
   "id": 175,
   "command": "tail -n 5 /system/folder1/data.csv",
-  "score": 0
+  "score": 1
  },
  {
   "id": 176,
@@ -932,7 +932,7 @@
  {
   "id": 186,
   "command": "diff -u /system/folder1 /system/folder2",
-  "score": 0
+  "score": 1
  },
  {
   "id": 187,
@@ -1022,7 +1022,7 @@
  {
   "id": 204,
   "command": "find /workspace -type f -mmin +60",
-  "score": 0
+  "score": 1
  },
  {
   "id": 205,
@@ -1037,7 +1037,7 @@
  {
   "id": 207,
   "command": "find /workspace -type f -exec du -sh {} + | sort -rh && awk 'BEGIN {print 0}'",
-  "score": 0
+  "score": 1
  },
  {
   "id": 208,
@@ -1062,7 +1062,7 @@
  {
   "id": 212,
   "command": "find /workspace -type f -iname '*.txt' -exec ls -lhd {} +",
-  "score": 0
+  "score": 1
  },
  {
   "id": 213,
@@ -1077,12 +1077,12 @@
  {
   "id": 215,
   "command": "find /workspace/dir1 -type f -print0 | xargs -0 -r grep -lZ -- hello | tr '\\0' '\\n'",
-  "score": 0
+  "score": 1
  },
  {
   "id": 216,
   "command": "du -h --max-depth=1 /workspace | sort -rh",
-  "score": 0
+  "score": 1
  },
  {
   "id": 217,
@@ -1092,7 +1092,7 @@
  {
   "id": 218,
   "command": "find /workspace -mindepth 1 -type d -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 3 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 219,
@@ -1102,7 +1102,7 @@
  {
   "id": 220,
   "command": "sed '$d' /workspace/dir1/a.txt",
-  "score": 0
+  "score": 1
  },
  {
   "id": 221,
@@ -1112,17 +1112,17 @@
  {
   "id": 222,
   "command": "find /workspace -type f -size +1k -size -32k -exec du -sh {} + | sort -rh",
-  "score": 0
+  "score": 1
  },
  {
   "id": 223,
   "command": "find /workspace -type f -print0 | sort -z | tr '\\0' '\\n' && find . -type f",
-  "score": 0
+  "score": 1
  },
  {
   "id": 224,
   "command": "find /workspace -type f -size +1k && find . -type f -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 1 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 225,
@@ -1132,7 +1132,7 @@
  {
   "id": 226,
   "command": "find workspace -mindepth 1 -type d -iname mysql",
-  "score": 0
+  "score": 1
  },
  {
   "id": 227,
@@ -1142,7 +1142,7 @@
  {
   "id": 228,
   "command": "find /workspace -type f -iname old2.txt && date",
-  "score": 0
+  "score": 1
  },
  {
   "id": 229,
@@ -1172,12 +1172,12 @@
  {
   "id": 234,
   "command": "find /workspace -type f -printf '%T@\\t%p\\0' | sort -z -n | head -z -n 1 | cut -z -f2- | xargs -0 -r ls -lhd -- && tree",
-  "score": 0
+  "score": 1
  },
  {
   "id": 235,
   "command": "find /workspace -mindepth 1 -type d -printf '%s\\t%p\\0' | sort -z -nr | head -z -n 2 | cut -z -f2- | xargs -0 -r du -sh --",
-  "score": 0
+  "score": 1
  },
  {
   "id": 236,
@@ -1257,7 +1257,7 @@
  {
   "id": 251,
   "command": "sort -r /workspace/dir1/long.txt",
-  "score": 0
+  "score": 1
  },
  {
   "id": 252,
@@ -1317,7 +1317,7 @@
  {
   "id": 263,
   "command": "printenv | sort && pgrep -a -i -- semicolons",
-  "score": 0
+  "score": 1
  },
  {
   "id": 264,
@@ -1382,7 +1382,7 @@
  {
   "id": 276,
   "command": "ping -c 4 192.168.1.1",
-  "score": 0
+  "score": 1
  },
  {
   "id": 277,
@@ -1462,7 +1462,7 @@
  {
   "id": 292,
   "command": "find /testbed -mindepth 1 -type d ! -iname /testbed",
-  "score": 0
+  "score": 1
  },
  {
   "id": 293,
@@ -1482,7 +1482,7 @@
  {
   "id": 296,
   "command": "grep -i -- value3 /testbed/dir1/subdir1/jsonfile1.json",
-  "score": 0
+  "score": 1
  },
  {
   "id": 297,
