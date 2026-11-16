@@ -83,13 +83,28 @@ def build(n=400_000, seed=77):
     r = random.Random(seed)
     seen, total = {}, Counter()
     made = 0
-    extra = _extra()
-    while made < n + len(extra):
-        words, out, n_req = extra[made - n] if made >= n else mix.example(r)
+
+    def examples():
+        while True:
+            yield mix.example(r)
+
+    gen, extra = examples(), _extra()
+    for words, out, n_req in (next(gen) for _ in iter(int, 1)):
+        if made >= n:
+            break
         toks = [t for t in out if t != ir.END]
         if ir.SEP in toks:
             continue                                     # several steps: words cannot be attributed to one of them
         made += 1
+        used = ir.spans_used(out)
+        literal = set(content([w for i, w in enumerate(words[:n_req]) if i not in used]))
+        for name in {ir.VOCAB[t] for t in toks if t < ir.NV and ir.VOCAB[t] in ir.BY_NAME}:
+            total[name] += 1
+            seen.setdefault(name, Counter()).update(literal)
+    for words, out, n_req in extra:
+        toks = [t for t in out if t != ir.END]
+        if ir.SEP in toks:
+            continue
         used = ir.spans_used(out)
         literal = set(content([w for i, w in enumerate(words[:n_req]) if i not in used]))
         for name in {ir.VOCAB[t] for t in toks if t < ir.NV and ir.VOCAB[t] in ir.BY_NAME}:

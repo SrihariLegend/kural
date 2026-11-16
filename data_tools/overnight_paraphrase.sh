@@ -8,6 +8,8 @@ cd "$(dirname "$0")/.."
 O=$1; N=${2:-12000}
 mkdir -p "$O/cand"
 log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$O/run.log"; }
+FROM=${FROM:-reword}            # FROM=train resumes after the rewordings and word table
+if [ "$FROM" = reword ]; then
 log "rewording $N requests"
 python3 data_tools/paraphrase.py "$O/para" --n "$N" >> "$O/run.log" 2>&1
 log "stats: $(cat "$O/para/stats.json" | tr -d '\n ')"
@@ -15,6 +17,7 @@ log "stats: $(cat "$O/para/stats.json" | tr -d '\n ')"
 for p in $(pgrep -x ollama); do tr '\0' '\n' < /proc/$p/environ 2>/dev/null | grep -q "OLLAMA_HOST=127.0.0.1:11435" && kill "$p"; done
 log "word table"
 KURAL_LEXICON="$O/cand/lexicon.json" KURAL_LEXICON_EXTRA="$O/para/train.jsonl" python3 -m kural.lexicon >> "$O/run.log" 2>&1
+fi
 log "training"
 .venv/bin/python -m kural.train --n 1600000 --epochs 12 --extra "$O/para/train.jsonl" --extra-repeat 3 --out "$O/cand/weights.npz" >> "$O/run.log" 2>&1
 python3 -m kural.export --weights "$O/cand/weights.npz" --out "$O/cand/model.kural" >> "$O/run.log" 2>&1
