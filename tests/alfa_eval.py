@@ -26,12 +26,16 @@ def main():
     done = {}
     if os.path.exists(dst):
         done = {r["id"]: r for r in json.load(open(dst))}          # resume
+    if "--rescore-zero" in sys.argv:                                # judge again every answered task that scored 0
+        done = {k: r for k, r in done.items() if r["score"] or not r["command"]}
     t0 = time.time()
     for n, it in enumerate(items):
         if it["id"] in done:
             continue
         cmd = it.get("command")
-        score = submit_command(index=it["id"], command=cmd, eval_mode="embed") if cmd else 0
+        # eval_param is the cosine threshold (the paper's 0.75); without it icalfa compares against its default
+        # "gpt-4-0613" string, raises, and scores the task 0 whenever the two outputs differ.
+        score = submit_command(index=it["id"], command=cmd, eval_mode="embed", eval_param=0.75) if cmd else 0
         done[it["id"]] = {"id": it["id"], "command": cmd, "score": score}
         if n % 10 == 0 or n == len(items) - 1:
             json.dump(sorted(done.values(), key=lambda r: r["id"]), open(dst, "w"), indent=1)
