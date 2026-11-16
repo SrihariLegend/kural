@@ -13,12 +13,17 @@ Kept rewordings become training examples with the original program (AutoQA, EMNL
 was worth about 18 points). From 5% of the sampled requests, rewordings that pass checks 1-2 are set aside *without*
 check 3 as a held-out "wording" test, which measures how well a model handles wording it was not built for.
 
-  python data_tools/paraphrase.py OUT_DIR [--n 12000] [--host http://127.0.0.1:11435] [--model qwen2.5:7b-instruct]
+  python data_tools/paraphrase.py OUT_DIR [--n 12000] --backend pi \
+      --models google-vertex/gemini-4-hydrogen:high,azure/gpt-6-luna:max [--batch 20] [--workers 16]
+
+The pi backend sends batches of requests to models through the `pi` CLI (one model per batch, taking turns);
+every kept rewording records which model wrote it, and stats.json breaks the keep rate down per model.
 
 Writes OUT_DIR/train.jsonl and OUT_DIR/heldout.jsonl ({words, out, n, text, source, command}) and OUT_DIR/stats.json.
 Resumable: OUT_DIR/raw.jsonl keeps every model answer.
 """
 import argparse
+import subprocess
 import glob
 import json
 import os
@@ -115,6 +120,37 @@ def sample(n, seed):
     return out
 
 
+BATCH_PROMPT = """Below are requests people typed to a Linux terminal assistant, numbered. For EACH request, rewrite it \
+the way {k} different real people might type it. Vary the wording, word order and tone: casual, terse, polite, wordy, \
+a beginner who does not know the jargon, someone in a hurry (at most one version per request may have a small typo in \
+an ordinary word). Keep the meaning exactly the same: do not add or drop any condition, value or step.
+The strings listed after "keep:" must appear unchanged, character for character, in every version of that request.
+
+{items}
+
+Answer with exactly one JSON object per line and nothing else: {{"i": <number>, "v": ["version 1", ...]}}"""
+
+
+def ask_pi(model, batch, k=4):
+    """batch: [(i, text, values)] -> {i: [versions]}"""
+    items = "\n".join(f"{i}. {text}\n   keep: {values}" for i, text, values in batch)
+    cmd = ["pi", "-p", "--no-tools", "--no-session", "--no-context-files", "--no-skills", "--no-extensions",
+           "--model", model, "--system-prompt", "You write training data. Follow the instructions exactly.",
+           BATCH_PROMPT.format(k=k, items=items)]
+    p = subprocess.run(cmd, capture_output=True, text=True, timeout=900, cwd="/tmp", stdin=subprocess.DEVNULL)
+    out = {}
+    for line in p.stdout.splitlines():
+        line = line.strip().strip("`")
+        if not line.startswith("{"):
+            continue
+        try:
+            r = json.loads(line)
+            out[int(r["i"])] = [str(v) for v in r.get("v", [])][:k + 2]
+        except (ValueError, KeyError, TypeError):
+            continue
+    return out
+
+
 def ask(host, model, text, values, k=4):
     body = json.dumps({"model": model, "prompt": PROMPT.format(text=text, k=k, values=values), "stream": False,
                        "options": {"temperature": 0.9, "top_p": 0.95, "num_predict": 300}}).encode()
@@ -131,16 +167,20 @@ def main():
     ap.add_argument("--host", default="http://127.0.0.1:11435")
     ap.add_argument("--model", default="qwen2.5:7b-instruct")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--backend", choices=["ollama", "pi"], default="ollama")
+    ap.add_argument("--models", default="google-vertex/gemini-4-hydrogen:high,azure/gpt-6-luna:max")
+    ap.add_argument("--batch", type=int, default=20)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     raw_path = os.path.join(a.out, "raw.jsonl")
     items = sample(a.n, a.seed)
-    done = {}
+    done, by_model = {}, {}
     if os.path.exists(raw_path):
         for line in open(raw_path):
             try:
                 r = json.loads(line)
                 done[r["i"]] = r["answer"]
+                by_model[r["i"]] = r.get("model", a.model)
             except ValueError:
                 pass
 
@@ -153,28 +193,57 @@ def main():
             return i, f"<error {e}>"
 
     todo = [i for i in range(len(items)) if i not in done]
-    with open(raw_path, "a") as raw, ThreadPoolExecutor(a.workers) as pool:
-        for n, (i, answer) in enumerate(pool.map(job, todo)):
-            done[i] = answer
-            raw.write(json.dumps({"i": i, "answer": answer}) + "\n")
-            if n % 200 == 0:
+    if a.backend == "pi":
+        models = a.models.split(",")
+        batches = [todo[j:j + a.batch] for j in range(0, len(todo), a.batch)]
+
+        def pjob(b):
+            bi, ids = b
+            model = models[bi % len(models)]
+            payload = []
+            for i in ids:
+                words, toks, _ = items[i]
+                payload.append((i, " ".join(words), "; ".join(" ".join(words[s:e + 1]) for s, e in spans(toks)) or "(none)"))
+            try:
+                return model, ids, ask_pi(model, payload)
+            except Exception as e:
+                print(f"batch {bi} failed: {e}", flush=True)
+                return model, ids, {}
+
+        with open(raw_path, "a") as raw, ThreadPoolExecutor(a.workers) as pool:
+            for n, (model, ids, res) in enumerate(pool.map(pjob, enumerate(batches))):
+                for i in ids:
+                    if i in res:
+                        done[i] = "\n".join(res[i]); by_model[i] = model
+                        raw.write(json.dumps({"i": i, "answer": done[i], "model": model}) + "\n")
                 raw.flush()
-                print(f"asked {len(done)}/{len(items)}", flush=True)
+                if n % 10 == 0:
+                    print(f"asked {len(done)}/{len(items)} ({n + 1}/{len(batches)} batches)", flush=True)
+    else:
+        with open(raw_path, "a") as raw, ThreadPoolExecutor(a.workers) as pool:
+            for n, (i, answer) in enumerate(pool.map(job, todo)):
+                done[i] = answer
+                raw.write(json.dumps({"i": i, "answer": answer, "model": a.model}) + "\n")
+                if n % 200 == 0:
+                    raw.flush()
+                    print(f"asked {len(done)}/{len(items)}", flush=True)
 
     tests = test_requests()
     env = C.Env(live=False, last="ls")
-    stats = {"requests": len(items), "rewordings": 0, "values_missing": 0, "test_overlap": 0, "duplicate": 0,
-             "roundtrip_failed": 0, "kept": 0, "heldout": 0}
+    stats = {"requests": len(items), "answered": len(done), "rewordings": 0, "values_missing": 0, "test_overlap": 0,
+             "duplicate": 0, "roundtrip_failed": 0, "kept": 0, "heldout": 0, "per_model": {}}
     seen = set()
     with open(os.path.join(a.out, "train.jsonl"), "w") as tr, open(os.path.join(a.out, "heldout.jsonl"), "w") as ho:
         for i in range(len(items)):
             words, toks, cmd = items[i]
             held = i % 20 == 0
+            pm = stats["per_model"].setdefault(by_model.get(i, "?"), {"rewordings": 0, "kept": 0})
             for line in (done.get(i) or "").split("\n"):
                 text = line.strip().strip('"').lstrip("-*0123456789.) ").strip()
                 if not text or text.startswith("<error") or len(text) > 300:
                     continue
                 stats["rewordings"] += 1
+                pm["rewordings"] += 1
                 low = text.lower()
                 if low in seen:
                     stats["duplicate"] += 1
@@ -190,7 +259,8 @@ def main():
                 if new_out is None:
                     stats["values_missing"] += 1
                     continue
-                rec = {"words": new_words, "out": new_out, "n": len(new_words), "text": text, "source": " ".join(words), "command": cmd}
+                rec = {"words": new_words, "out": new_out, "n": len(new_words), "text": text, "source": " ".join(words), "command": cmd,
+                       "model": by_model.get(i, "?")}
                 if held:
                     stats["heldout"] += 1
                     ho.write(json.dumps(rec) + "\n")
@@ -200,6 +270,7 @@ def main():
                     stats["roundtrip_failed"] += 1
                     continue
                 stats["kept"] += 1
+                pm["kept"] += 1
                 tr.write(json.dumps(rec) + "\n")
     json.dump(stats, open(os.path.join(a.out, "stats.json"), "w"), indent=1)
     print(json.dumps(stats))

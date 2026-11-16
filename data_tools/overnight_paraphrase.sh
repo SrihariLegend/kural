@@ -11,7 +11,7 @@ log() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$O/run.log"; }
 FROM=${FROM:-reword}            # FROM=train resumes after the rewordings and word table
 if [ "$FROM" = reword ]; then
 log "rewording $N requests"
-python3 data_tools/paraphrase.py "$O/para" --n "$N" >> "$O/run.log" 2>&1
+python3 data_tools/paraphrase.py "$O/para" --n "$N" ${PARA_ARGS:-} >> "$O/run.log" 2>&1
 log "stats: $(cat "$O/para/stats.json" | tr -d '\n ')"
 # free the GPU for training
 for p in $(pgrep -x ollama); do tr '\0' '\n' < /proc/$p/environ 2>/dev/null | grep -q "OLLAMA_HOST=127.0.0.1:11435" && kill "$p"; done
@@ -26,6 +26,9 @@ python3 tests/report.py --final > "$O/report_base.txt" 2>&1
 KURAL_MODEL="$O/cand/model.kural" KURAL_LEXICON="$O/cand/lexicon.json" KURAL_WEIGHTS="$O/cand/weights.npz" python3 tests/report.py --final > "$O/report_cand.txt" 2>&1
 python3 tests/eval_wording.py "$O/para/heldout.jsonl" > "$O/wording_base.txt" 2>&1
 KURAL_MODEL="$O/cand/model.kural" KURAL_LEXICON="$O/cand/lexicon.json" python3 tests/eval_wording.py "$O/para/heldout.jsonl" > "$O/wording_cand.txt" 2>&1
+b=$(grep -o "([0-9.]*%)" "$O/wording_base.txt" | head -1 | tr -d '()%'); c=$(grep -o "([0-9.]*%)" "$O/wording_cand.txt" | head -1 | tr -d '()%')
+log "held-out wording: current $b%, candidate $c%"
+if python3 -c "import sys; sys.exit(0 if float('$c') >= float('$b') else 1)"; then
 KURAL_MODEL="$O/cand/model.kural" KURAL_LEXICON="$O/cand/lexicon.json" python3 - "$O" <<'PY'
 import json, subprocess, sys
 o = sys.argv[1]
@@ -38,4 +41,8 @@ json.dump(out, open(f"{o}/alfa_cand_commands.json", "w"))
 PY
 K=$(pwd)
 (cd "$O" && "$K/data/eval/icalfa-venv/bin/python" "$K/tests/alfa_eval.py" alfa_cand_commands.json alfa_cand_scores.json > alfa_cand.txt 2>&1)
-log "done: $(grep final "$O/alfa_cand.txt")"
+log "benchmark: $(grep final "$O/alfa_cand.txt")"
+else
+log "candidate not better on held-out wording: benchmark skipped"
+fi
+log "done"
